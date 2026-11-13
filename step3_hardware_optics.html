@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step 3: Optics &amp; Sensors | AI Vision Selection Tool</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="brand-container">
+      <span class="brand-badge">STEP 3</span>
+      <div>
+        <h1 class="brand-title">Optics &amp; Sensors — Parameter Calculation &amp; Product Selection</h1>
+        <p class="brand-subtitle">Calculate camera, lens, and lighting parameters from Step 2, then select matching hardware</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="rules_step2.html" target="_blank" class="btn btn-secondary">🔍 Open Decision Rules &amp; Equations &nearr;</a>
+      <a href="step2_requirements.html" class="btn btn-secondary">&larr; Step 2</a>
+      <a href="step4_software_ai.html" class="btn btn-primary" id="btn-next-top">Next: Step 4 (AI &amp; Software) &rarr;</a>
+    </div>
+  </header>
+
+  <!-- Step Wizard Bar -->
+  <nav class="wizard-nav">
+    <a href="index.html" class="step-item"><span class="step-num">0</span> Overview</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step1_use_case.html" class="step-item completed"><span class="step-num">1</span> Use Case &amp; NPV</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step2_requirements.html" class="step-item completed"><span class="step-num">2</span> Requirement Definition</a>
+    <span class="step-divider">&gt;</span>
+    <div class="step-item active"><span class="step-num">3</span> Optics &amp; Sensors</div>
+    <span class="step-divider">&gt;</span>
+    <a href="step4_software_ai.html" class="step-item"><span class="step-num">4</span> AI and Software</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step5_integration.html" class="step-item"><span class="step-num">5</span> Integration</a>
+    <span class="step-divider">&gt;</span>
+    <a href="results.html" class="step-item"><span class="step-num">★</span> Results</a>
+  </nav>
+
+  <main class="main-wrapper">
+
+    <!-- ======================================================================= -->
+    <!-- PART A: CALCULATED CAMERA, LENS & ILLUMINATION PARAMETERS (From Step 2) -->
+    <!-- Matches Slide 06_Step3_Optics_and_Sensors_V2.pptx & 06b_3D_Concepts     -->
+    <!-- ======================================================================= -->
+    <div class="card" style="margin-bottom: 1.5rem; border-top: 4px solid #0f9489;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+        <h2 class="card-title" style="margin-bottom: 0;">3.1 Calculated Camera, Lens &amp; Illumination Parameters</h2>
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <label for="override-scan-mode" style="font-size: 0.8rem; color: #475569; font-weight: 600;">Scan Mode:</label>
+          <select id="override-scan-mode" class="form-control" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: auto;">
+            <option value="auto">⚡ Auto-Derived from Step 2</option>
+            <option value="area_scan">Force 2D Area Scan</option>
+            <option value="line_scan">Force 2D Line Scan</option>
+          </select>
+        </div>
+      </div>
+      <p class="card-desc">
+        Physical sizing equations translating your Step 2 requirements into concrete hardware specifications (Steger et al., 2018; VDI/VDE 2632).
+      </p>
+
+      <!-- 3 Core Sizing Equations (Matching Slide 06 V2!) -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
+        
+        <!-- Column 1: Camera Sensor Resolution -->
+        <div class="stat-box" style="border-top: 3px solid #0f9489; background: #ffffff; border: 1px solid #cbd5e1; border-top-width: 4px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="stat-label" style="color: #0d746c;">1. Camera Sensor Resolution</span>
+            <span class="unit-badge" style="font-size: 0.7rem;">Step 2.2 Input</span>
+          </div>
+          <div class="formula-callout" style="margin: 0.45rem 0; padding: 0.4rem 0.6rem; font-size: 0.85rem; background: #f0fdfa; border-color: #0f9489; color: #0d746c; text-align: center; font-weight: 700;">
+            N_px = ( k · FoV / d_min )²
+          </div>
+          <div class="stat-value" id="calc-res-main" style="font-size: 1.25rem; color: #0f172a;">10.8 MP</div>
+          <div class="stat-sub" id="calc-res-sub" style="margin-top: 0.15rem;">3600 × 3000 px (k = 3 px/feature)</div>
+          <div style="margin-top: 0.5rem; padding-top: 0.45rem; border-top: 1px dashed #cbd5e1; font-size: 0.78rem; color: #0f172a;">
+            <strong>&rarr; Hardware Decision:</strong> <span id="calc-res-decision">Area Scan Sensor (≥ 10.8 MP)</span>
+          </div>
+        </div>
+
+        <!-- Column 2: Lens Focal Length -->
+        <div class="stat-box" style="border-top: 3px solid #0284c7; background: #ffffff; border: 1px solid #cbd5e1; border-top-width: 4px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="stat-label" style="color: #0284c7;">2. Lens Focal Length</span>
+            <span class="unit-badge" style="font-size: 0.7rem;">Step 2.2 Input</span>
+          </div>
+          <div class="formula-callout" style="margin: 0.45rem 0; padding: 0.4rem 0.6rem; font-size: 0.85rem; background: #eff6ff; border-color: #0284c7; color: #0369a1; text-align: center; font-weight: 700;">
+            f = ( WD · w_sensor ) / FoV
+          </div>
+          <div class="stat-value" id="calc-lens-main" style="font-size: 1.25rem; color: #0284c7;">f = 12 mm</div>
+          <div class="stat-sub" id="calc-lens-sub" style="margin-top: 0.15rem;">Exact f = 12.9 mm (WD = 600 mm, FoV = 400 mm)</div>
+          <div style="margin-top: 0.5rem; padding-top: 0.45rem; border-top: 1px dashed #cbd5e1; font-size: 0.78rem; color: #0f172a;">
+            <strong>&rarr; Hardware Decision:</strong> <span id="calc-lens-decision">Standard 12 mm C-Mount Lens</span>
+          </div>
+        </div>
+
+        <!-- Column 3: Shutter & Illumination -->
+        <div class="stat-box" style="border-top: 3px solid #1e293b; background: #ffffff; border: 1px solid #cbd5e1; border-top-width: 4px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span class="stat-label" style="color: #1e293b;">3. Shutter &amp; Illumination</span>
+            <span class="unit-badge" style="font-size: 0.7rem;">Step 2.1 Input</span>
+          </div>
+          <div class="formula-callout" style="margin: 0.45rem 0; padding: 0.4rem 0.6rem; font-size: 0.85rem; background: #f1f5f9; border-color: #475569; color: #1e293b; text-align: center; font-weight: 700;">
+            t_exp,max = d_min / ( 2 · v )
+          </div>
+          <div class="stat-value" id="calc-exp-main" style="font-size: 1.25rem; color: #0f172a;">125 µs</div>
+          <div class="stat-sub" id="calc-exp-sub" style="margin-top: 0.15rem;">Max exposure for ≤ 0.5 px motion blur</div>
+          <div style="margin-top: 0.5rem; padding-top: 0.45rem; border-top: 1px dashed #cbd5e1; font-size: 0.78rem; color: #0f172a;">
+            <strong>&rarr; Hardware Decision:</strong> <span id="calc-exp-decision">Global Shutter + LED Strobe Overdrive</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 2: Derived 3D Camera Concept (Step 2.3) & Material/Filter Setup (Step 2.4) -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        
+        <div class="stat-box" style="margin-bottom: 0; border-left: 4px solid #d97706;">
+          <div class="stat-label">4. Spatial Camera Concept (Derived from Step 2.3)</div>
+          <div id="calc-3d-concept" style="font-weight: 700; font-size: 0.95rem; color: #0f172a; margin-top: 0.15rem;">
+            2D Planar Camera (Area Scan)
+          </div>
+          <div id="calc-3d-reason" style="font-size: 0.8rem; color: #475569; margin-top: 0.15rem;">
+            Neither 3D object pose nor Z-depth topography is required.
+          </div>
+        </div>
+
+        <div class="stat-box" style="margin-bottom: 0; border-left: 4px solid #6d28d9;">
+          <div class="stat-label">5. Wavelength, Filter &amp; Housing (Derived from Step 2.4 &amp; 2.1)</div>
+          <div id="calc-mat-setup" style="font-weight: 700; font-size: 0.95rem; color: #6d28d9; margin-top: 0.15rem;">
+            Standard Direct Bar Light (Broadband White 5700K)
+          </div>
+          <div id="calc-mat-sub" style="font-size: 0.8rem; color: #475569; margin-top: 0.15rem;">
+            Filter: Standard UV/IR cut filter | Required Protection: IP65
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- PART B: CAMERA & LENS PRODUCT RECOMMENDATIONS (WITH CORE PARAMETERS)    -->
+    <!-- ======================================================================= -->
+    <div class="grid-two-column">
+      
+      <!-- Left Column: Camera Products & Lens Products -->
+      <div>
+        
+        <!-- Recommended Camera Products -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+            <h2 class="card-title" style="margin-bottom: 0;">3.2 Recommended Camera Products (with Core Parameters)</h2>
+            <span class="unit-badge" id="lbl-catalog-badge" style="background: #0f9489; color: #ffffff; padding: 4px 8px;">Filtered by Step 3.1 Parameters</span>
+          </div>
+          <p class="card-desc" id="lbl-catalog-filter-summary">
+            Showing industrial cameras matching your calculated resolution, shutter, dimensionality, and spectrum.
+          </p>
+
+          <div id="camera-list-container" style="display: flex; flex-direction: column; gap: 1rem;">
+            <!-- Dynamically populated via JS with core parameters prominently highlighted -->
+          </div>
+        </div>
+
+        <!-- Recommended Lens Products (with Focal Length, Aperture, Image Circle) -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+            <h2 class="card-title" style="margin-bottom: 0;">3.3 Recommended Industrial Lenses (with Core Parameters)</h2>
+            <span class="unit-badge" style="background: #0284c7; color: #ffffff; padding: 4px 8px;" id="badge-rec-focal">Target: f = 12 mm</span>
+          </div>
+          <p class="card-desc" id="desc-lens-selection">
+            Select an industrial C-Mount / F-Mount lens matching your calculated focal length $f$.
+          </p>
+
+          <div id="lens-list-container" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <!-- Dynamically populated Lens product cards with focal length, aperture range, min WD, price -->
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+          <a href="step2_requirements.html" class="btn btn-secondary">&larr; Back to Step 2 (Requirements)</a>
+          <a href="step4_software_ai.html" class="btn btn-primary" style="padding: 0.8rem 1.6rem;">
+            Proceed to Step 4: Calculate AI Parameters &amp; Models &rarr;
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Selected Optical Setup & Core Parameter Summary -->
+      <div>
+        <div class="card" style="position: sticky; top: 80px; border-color: var(--accent-cyan);">
+          <h3 class="card-title" style="color: var(--accent-cyan);">Selected Optical Setup &amp; Core Parameters</h3>
+          <p class="card-desc">Active camera, lens, and illumination summary with key technical parameters.</p>
+
+          <div class="stat-box">
+            <div class="stat-label">Selected Camera Product</div>
+            <div class="stat-value" id="val-summary-camera" style="font-size: 1.05rem;">Basler ace 2 Pro</div>
+            <div class="stat-sub" id="val-summary-cam-params" style="color: #0d746c; font-weight: 600; margin-top: 0.2rem;">
+              Resolution: 20.4 MP (5328×3840) | Global Shutter | Pixel: 2.74 µm
+            </div>
+            <div class="stat-sub" id="val-summary-cam-sub">Part #: 108126 | Price: € 1,290</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-label">Selected Lens Product</div>
+            <div class="stat-value" id="val-summary-lens" style="font-size: 1.05rem; color: #0284c7;">f = 25 mm C-Mount Lens</div>
+            <div class="stat-sub" id="val-summary-lens-params" style="color: #0369a1; font-weight: 600; margin-top: 0.2rem;">
+              Focal Length: 25 mm | Aperture: F1.4–F16 | Image Circle: 1.1"
+            </div>
+            <div class="stat-sub" id="val-summary-lens-sub">Matched to calculated f = 24.5 mm | Price: € 350</div>
+          </div>
+
+          <div class="stat-box">
+            <div class="stat-label">Illumination &amp; Optical Filter</div>
+            <div id="val-summary-illum" style="font-weight: 600; font-size: 0.92rem; color: #0f172a;">
+              Standard Direct Bar Light
+            </div>
+            <div class="stat-sub" id="val-summary-illum-params" style="margin-top: 0.2rem;">
+              Mode: Strobe Overdrive | Filter: Standard UV/IR cut | Est.: € 400
+            </div>
+          </div>
+
+          <div class="stat-box" style="background: #f0fdfa; border-color: #5eead4;">
+            <div class="stat-label" style="color: #0d746c;">Total Optical Hardware CAPEX</div>
+            <div class="stat-value" id="val-summary-total-front" style="color: #0d746c;">€ 2,040</div>
+            <div class="stat-sub">Camera + Lens + Illumination &amp; Filter</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Academic Research Prototype &copy; 2026 | Step 3: Optics &amp; Sensors — Parameter Calculation &amp; Product Selection</p>
+  </footer>
+
+  <script src="js/data/cameras.js"></script>
+  <script src="js/data/models.js"></script>
+  <script src="js/data/hardware.js"></script>
+  <script src="js/engine/optics.js"></script>
+  <script src="js/engine/latency.js"></script>
+  <script src="js/engine/mcdm.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    // Verified Industrial Lens Catalog with Core Parameters (Focal Length, Aperture, Image Circle, Min WD, Product URL)
+    const DEFAULT_LENS_CATALOG = [
+      { focalMm: 8,  name: "Computar V0828-MPY2 (8 mm Wide-Angle C-Mount)",      aperture: "F2.8 – F16", format: "1.1\" (17.6 mm)", minWdMm: 100, priceEuro: 280, typicalUse: "Wide Field of View at short working distance", productUrl: "https://computar.com/product/1111/V0828-MPY2" },
+      { focalMm: 12, name: "Kowa LM12JC10M (12 mm 10MP Industrial C-Mount)",     aperture: "F1.8 – F16", format: "2/3\" – 1\"",      minWdMm: 100, priceEuro: 290, typicalUse: "Standard medium-wide conveyor & assembly inspection", productUrl: "https://www.kowa-lenses.com/en/lm12jc10m-10mp-industrial-lens-2-3-c-mount" },
+      { focalMm: 16, name: "Fujinon HF16XA-5M (16 mm High-Resolution C-Mount)",  aperture: "F1.6 – F16", format: "2/3\" – 1.1\"",    minWdMm: 100, priceEuro: 320, typicalUse: "Universal machine vision & quality inspection", productUrl: "https://www.fujifilm.com/de/de/business/optical-devices/machine-vision-lens/hf-xa-5m" },
+      { focalMm: 25, name: "Edmund Optics 25 mm HP Series Fixed Focal Lens",     aperture: "F1.4 – F16", format: "1.1\" (17.6 mm)", minWdMm: 150, priceEuro: 350, typicalUse: "Low-distortion precision measurement & defect detection", productUrl: "https://www.edmundoptics.de/f/hp-series-fixed-focal-length-lenses/14794/" },
+      { focalMm: 35, name: "Kowa LM35JC10M (35 mm Telephoto Industrial Lens)",   aperture: "F2.0 – F16", format: "2/3\" – 1.1\"",    minWdMm: 200, priceEuro: 380, typicalUse: "Small FoV or large stand-off distance (WD > 600 mm)", productUrl: "https://www.kowa-lenses.com/en/lm35jc10m-10mp-industrial-lens-2-3-c-mount" },
+      { focalMm: 50, name: "Schneider-Kreuznach Apo-Componon 50 mm (C/F-Mount)", aperture: "F2.8 – F22", format: "1.1\" / Line Scan",minWdMm: 250, priceEuro: 450, typicalUse: "High-resolution 4K Line Scan & micro-defect inspection", productUrl: "https://schneiderkreuznach.com/en/industrial-optics" }
+    ];
+    const LENS_CATALOG = (typeof CSVDatabase !== "undefined") ? CSVDatabase.getLensesCatalog(DEFAULT_LENS_CATALOG) : DEFAULT_LENS_CATALOG;
+
+    const state = AppState.load();
+    const req = state.requirements;
+
+    // Top Parameter Elements
+    const elOverrideScan = document.getElementById("override-scan-mode");
+    const elCalcResMain = document.getElementById("calc-res-main");
+    const elCalcResSub = document.getElementById("calc-res-sub");
+    const elCalcResDec = document.getElementById("calc-res-decision");
+
+    const elCalcLensMain = document.getElementById("calc-lens-main");
+    const elCalcLensSub = document.getElementById("calc-lens-sub");
+    const elCalcLensDec = document.getElementById("calc-lens-decision");
+
+    const elCalcExpMain = document.getElementById("calc-exp-main");
+    const elCalcExpSub = document.getElementById("calc-exp-sub");
+    const elCalcExpDec = document.getElementById("calc-exp-decision");
+
+    const elCalc3dConcept = document.getElementById("calc-3d-concept");
+    const elCalc3dReason = document.getElementById("calc-3d-reason");
+    const elCalcMatSetup = document.getElementById("calc-mat-setup");
+    const elCalcMatSub = document.getElementById("calc-mat-sub");
+
+    // Product List Elements
+    const elCatalogSummary = document.getElementById("lbl-catalog-filter-summary");
+    const elCameraList = document.getElementById("camera-list-container");
+    const elLensList = document.getElementById("lens-list-container");
+    const elBadgeRecFocal = document.getElementById("badge-rec-focal");
+
+    // Right Summary Elements
+    const elValSummaryCam = document.getElementById("val-summary-camera");
+    const elValSummaryCamParams = document.getElementById("val-summary-cam-params");
+    const elValSummaryCamSub = document.getElementById("val-summary-cam-sub");
+    const elValSummaryLens = document.getElementById("val-summary-lens");
+    const elValSummaryLensParams = document.getElementById("val-summary-lens-params");
+    const elValSummaryLensSub = document.getElementById("val-summary-lens-sub");
+    const elValSummaryIllum = document.getElementById("val-summary-illum");
+    const elValSummaryIllumParams = document.getElementById("val-summary-illum-params");
+    const elValSummaryTotalFront = document.getElementById("val-summary-total-front");
+
+    if (req.sensorGeometryMode) {
+      elOverrideScan.value = req.sensorGeometryMode;
+    }
+
+    function computeStep3Parameters() {
+      const scanModeSetting = elOverrideScan.value;
+      const derivedScan = OpticsEngine.deriveScanGeometry(
+        req.timingMode || "conveyor_throughput",
+        req.velocityMps || 0,
+        req.fovXMm || 400,
+        req.minDefectMm || 0.2,
+        req.needs3D || false
+      );
+      const effectiveGeom = (scanModeSetting === "auto") ? derivedScan.geometry : scanModeSetting;
+      req.sensorGeometry = effectiveGeom;
+      req.sensorGeometryMode = scanModeSetting;
+
+      // 1. Sensor Resolution Calculation
+      const res = OpticsEngine.calculateResolution(
+        effectiveGeom,
+        req.fovXMm || 400,
+        req.fovYMm || 300,
+        req.minDefectMm || 0.2,
+        req.velocityMps || 0,
+        3.0
+      );
+
+      // 2. Lens Focal Length Calculation (using selected camera's sensor width if available, default 8.8 mm)
+      const activeCam = CAMERA_CATALOG.find(c => c.id === state.optics.selectedCameraId);
+      const sensorWidthMm = (activeCam && activeCam.sensorWidthMm) ? activeCam.sensorWidthMm : 8.8;
+      const fl = OpticsEngine.calculateFocalLength(req.workingDistanceMm || 600, req.fovXMm || 400, sensorWidthMm);
+
+      // 3. Exposure & Shutter Calculation
+      const exp = OpticsEngine.calculateExposureTime(req.minDefectMm || 0.2, req.velocityMps || 0);
+
+      // 4. 3D Dimensionality Evaluation
+      const dim = OpticsEngine.evaluateDimensionality(
+        req.needsZHeight,
+        req.needs6DoFPose,
+        req.surfaceType,
+        req.velocityMps || 0,
+        req.workingDistanceMm || 600,
+        req.minDefectMm || 0.2
+      );
+
+      // 5. Material & Illumination
+      const illum = OpticsEngine.recommendIllumination(req.spectralBand, req.surfaceType, "surface");
+
+      // Populate Section 3.1 Cards
+      if (res.isLineScan) {
+        elCalcResMain.textContent = `${res.minWidthPx} px Line (${res.requiredLineRateKhz} kHz)`;
+        elCalcResSub.textContent = `FoV_x = ${req.fovXMm} mm, d_min = ${req.minDefectMm} mm (k = 3 px/defect)`;
+        elCalcResDec.textContent = `2D Line Scan Sensor (≥ ${res.minWidthPx} px width, ≥ ${res.requiredLineRateKhz} kHz)`;
+      } else {
+        elCalcResMain.textContent = `${res.minTotalMP} MP`;
+        elCalcResSub.textContent = `${res.minWidthPx} × ${res.minHeightPx} px (FoV = ${req.fovXMm}×${req.fovYMm} mm, d_min = ${req.minDefectMm} mm)`;
+        elCalcResDec.textContent = `2D Area Scan Sensor (≥ ${res.minTotalMP} MP)`;
+      }
+
+      elCalcLensMain.textContent = `f = ${fl.standardLensMm} mm`;
+      elCalcLensSub.textContent = `Exact f = ${fl.exactFocalLengthMm} mm (WD = ${req.workingDistanceMm} mm, w_sensor = ${sensorWidthMm} mm)`;
+      elCalcLensDec.textContent = `Standard ${fl.standardLensMm} mm Industrial Lens`;
+      elBadgeRecFocal.textContent = `Calculated Target: f = ${fl.standardLensMm} mm (Exact: ${fl.exactFocalLengthMm} mm)`;
+
+      elCalcExpMain.textContent = `${exp.maxExposureUs.toLocaleString()} µs`;
+      elCalcExpSub.textContent = `v = ${req.velocityMps} m/s, d_min = ${req.minDefectMm} mm (≤ 0.5 px blur)`;
+      elCalcExpDec.textContent = `${exp.shutterRequired} + ${exp.strobeRequired ? "LED Strobe Overdrive (10× brightness)" : "Continuous LED Light"}`;
+
+      elCalc3dConcept.textContent = req.needs3D ? dim.recommendedSensorFamily : `2D Planar Imaging (${res.isLineScan ? "Line Scan" : "Area Scan"})`;
+      elCalc3dReason.textContent = dim.reason + (req.needs3D ? " — " + dim.rationale : "");
+
+      elCalcMatSetup.textContent = `${illum.illuminationType} (${illum.colorSpectrum})`;
+      elCalcMatSub.textContent = `Optical Filter: ${illum.filter} | Encapsulation: ${req.ipRatingNeeded || "IP65"}`;
+
+      // Update state
+      state.opticsCalculations = {
+        minWidthPx: res.minWidthPx,
+        minHeightPx: res.minHeightPx,
+        minTotalMP: res.minTotalMP,
+        isLineScan: res.isLineScan,
+        requiredLineRateKhz: res.requiredLineRateKhz,
+        maxExposureUs: exp.maxExposureUs,
+        maxExposureMs: exp.maxExposureMs,
+        shutterRequired: exp.shutterRequired,
+        strobeRequired: exp.strobeRequired,
+        exactFocalLengthMm: fl.exactFocalLengthMm,
+        standardLensMm: fl.standardLensMm,
+        maxInferenceBudgetMs: state.opticsCalculations.maxInferenceBudgetMs || 100
+      };
+
+      // Auto-select closest standard lens if not manually set or if recalculating
+      state.optics.lensFocalLengthMm = fl.standardLensMm;
+      AppState.save(state);
+
+      return { res, fl, exp, dim, illum };
+    }
+
+    function renderCameras(calcData) {
+      elCameraList.innerHTML = "";
+      const is3D = req.needs3D;
+      const isLineScan = req.sensorGeometry === "line_scan";
+      const isNir = req.spectralBand === "nir";
+      const minMP = calcData.res.minTotalMP;
+      const maxExpUs = calcData.exp.maxExposureUs;
+
+      let compatibleCameras = CAMERA_CATALOG.filter(cam => {
+        if (is3D && cam.dimensionality !== "3D") return false;
+        if (!is3D && cam.dimensionality === "3D") return false;
+        if (isLineScan && !cam.technology.includes("Line Scan")) return false;
+        if (!isLineScan && !is3D && cam.technology.includes("Line Scan")) return false;
+        if (isNir && !cam.spectrum.includes("NIR") && !cam.spectrum.includes("Infrared")) return false;
+        if (!isLineScan && !is3D && cam.resolutionMP < (minMP * 0.65)) return false;
+        if (maxExpUs < 1000 && cam.shutter === "rolling") return false;
+        return true;
+      });
+
+      // Fallback if strict resolution filter leaves 0 cameras (e.g., ultra-high >25 MP requirement)
+      let relaxedNote = "";
+      if (compatibleCameras.length === 0) {
+        compatibleCameras = CAMERA_CATALOG.filter(cam => {
+          if (is3D) return cam.dimensionality === "3D";
+          if (isLineScan) return cam.technology.includes("Line Scan");
+          return cam.dimensionality === "2D";
+        });
+        relaxedNote = ` <em>(Note: Calculated ${minMP} MP exceeds single standard sensor; showing highest-resolution cameras in category)</em>`;
+      }
+
+      elCatalogSummary.innerHTML = `Showing <strong>${compatibleCameras.length} matching industrial cameras</strong> for calculated requirements: <strong>${is3D ? '3D Sensor' : (isLineScan ? 'Line Scan (' + calcData.res.requiredLineRateKhz + ' kHz)' : '≥ ' + minMP + ' MP Area Scan')}</strong>, <strong>${calcData.exp.shutterRequired}</strong>, Spectrum: <strong>${req.spectralBand || 'visible'}</strong>.${relaxedNote}`;
+
+      if (compatibleCameras.length > 0 && !compatibleCameras.some(c => c.id === state.optics.selectedCameraId)) {
+        state.optics.selectedCameraId = compatibleCameras[0].id;
+        AppState.save(state);
+      }
+
+      compatibleCameras.forEach((cam, idx) => {
+        const isSelected = cam.id === state.optics.selectedCameraId;
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.cursor = "pointer";
+        card.style.margin = "0";
+        card.style.border = isSelected ? "2px solid #0f9489" : "1px solid var(--border-color)";
+        card.style.backgroundColor = isSelected ? "#f0fdfa" : "#ffffff";
+
+        const coreResText = cam.technology.includes("Line")
+          ? `Line Width: ${cam.widthPx} px | Max Rate: ${cam.maxLineRateKhz} kHz`
+          : `Resolution: ${cam.resolutionMP} MP (${cam.widthPx} × ${cam.heightPx} px)`;
+
+        const coreSensorText = cam.dimensionality === "3D"
+          ? `Z-Accuracy: ${cam.zAccuracyMm} mm | Working Range: ${cam.workingDistanceRangeMm[0]}–${cam.workingDistanceRangeMm[1]} mm`
+          : `Sensor Width: ${cam.sensorWidthMm} mm (${cam.sensorFormat}) | Pixel Size: ${cam.pixelSizeUm} µm | ${cam.maxFps} FPS`;
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-weight: 700; font-size: 0.98rem; color: var(--text-main);">${cam.name}</span>
+                ${idx === 0 ? '<span class="unit-badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac;">Best Match</span>' : ''}
+                ${isSelected ? '<span class="unit-badge" style="background:#0f9489; color:#ffffff;">Selected</span>' : ''}
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.1rem;">
+                ${cam.manufacturer} | Part #: <strong>${cam.partNumber}</strong> | Technology: <strong>${cam.technology}</strong>
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-weight: 700; font-size: 1.05rem; color: var(--text-main);">€ ${cam.unitCostEuro.toLocaleString()}</span>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">${cam.interface}</div>
+            </div>
+          </div>
+
+          <!-- Highlighted Core Camera Parameters Bar -->
+          <div style="margin-top: 0.6rem; padding: 0.45rem 0.65rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; flex-wrap: wrap; gap: 0.75rem; font-size: 0.8rem; color: #0f172a;">
+            <span>🎯 <strong>${coreResText}</strong></span>
+            <span>|</span>
+            <span>📐 <strong>${coreSensorText}</strong></span>
+            <span>|</span>
+            <span>⚡ <strong>Shutter: ${cam.shutter.toUpperCase()}</strong></span>
+            <span>|</span>
+            <span>🛡️ <strong>${cam.ipRating}</strong></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.45rem; gap: 0.5rem;">
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">
+              <strong>Application Fit:</strong> ${cam.typicalUse}
+            </p>
+            ${cam.productUrl ? `<a href="${cam.productUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" style="font-size: 0.78rem; font-weight: 600; color: #0284c7; text-decoration: none; white-space: nowrap; padding: 0.2rem 0.55rem; background: #eff6ff; border: 1px solid #bae6fd; border-radius: 4px;">🔗 Manufacturer Product Page &nearr;</a>` : ''}
+          </div>
+        `;
+
+        card.addEventListener("click", () => {
+          state.optics.selectedCameraId = cam.id;
+          AppState.save(state);
+          const refreshedCalc = computeStep3Parameters();
+          renderCameras(refreshedCalc);
+          renderLenses(refreshedCalc);
+          updateSummary(refreshedCalc);
+        });
+
+        elCameraList.appendChild(card);
+      });
+    }
+
+    function renderLenses(calcData) {
+      elLensList.innerHTML = "";
+      const targetFocalMm = calcData.fl.standardLensMm;
+      const is3D = req.needs3D;
+
+      if (is3D) {
+        elLensList.innerHTML = `
+          <div class="stat-box" style="background: #f8fafc; border-left: 4px solid #0284c7; margin-bottom: 0;">
+            <div style="font-weight: 700; color: #0f172a; font-size: 0.92rem;">Factory-Calibrated Integrated 3D Optics</div>
+            <div style="font-size: 0.82rem; color: #475569; margin-top: 0.2rem;">
+              3D cameras (Stereo, ToF, Structured Light, LiDAR) include factory-calibrated matched lenses and projectors. No external C-Mount lens is required.
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      LENS_CATALOG.forEach(lens => {
+        const isRecommended = lens.focalMm === targetFocalMm;
+        const isSelected = lens.focalMm === state.optics.lensFocalLengthMm;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.cursor = "pointer";
+        card.style.margin = "0";
+        card.style.padding = "0.75rem 1rem";
+        card.style.border = isSelected ? "2px solid #0284c7" : "1px solid var(--border-color)";
+        card.style.backgroundColor = isSelected ? "#eff6ff" : "#ffffff";
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-weight: 700; font-size: 0.95rem; color: #0f172a;">${lens.name}</span>
+                ${isRecommended ? '<span class="unit-badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac;">Matches Calculated f = ' + targetFocalMm + ' mm</span>' : ''}
+                ${isSelected ? '<span class="unit-badge" style="background:#0284c7; color:#ffffff;">Selected</span>' : ''}
+              </div>
+              <div style="font-size: 0.8rem; color: #334155; margin-top: 0.25rem;">
+                🔭 <strong>Focal Length: f = ${lens.focalMm} mm</strong> &nbsp;|&nbsp;
+                🔆 <strong>Aperture: ${lens.aperture}</strong> &nbsp;|&nbsp;
+                ⭕ <strong>Image Circle: ${lens.format}</strong> &nbsp;|&nbsp;
+                📏 <strong>Min. WD: ${lens.minWdMm} mm</strong>
+              </div>
+              <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.15rem;">${lens.typicalUse}</div>
+            </div>
+            <div style="text-align: right; min-width: 120px;">
+              <span style="font-weight: 700; font-size: 0.95rem; color: #0f172a;">€ ${lens.priceEuro}</span>
+              <div style="margin-top: 0.25rem;">
+                <a href="${lens.productUrl}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();" style="font-size: 0.74rem; font-weight: 600; color: #0284c7; text-decoration: none; padding: 0.15rem 0.45rem; background: #eff6ff; border: 1px solid #bae6fd; border-radius: 4px; display: inline-block;">🔗 Product Page &nearr;</a>
+              </div>
+            </div>
+          </div>
+        `;
+
+        card.addEventListener("click", () => {
+          state.optics.lensFocalLengthMm = lens.focalMm;
+          AppState.save(state);
+          renderLenses(calcData);
+          updateSummary(calcData);
+        });
+
+        elLensList.appendChild(card);
+      });
+    }
+
+    function updateSummary(calcData) {
+      const activeCam = CAMERA_CATALOG.find(c => c.id === state.optics.selectedCameraId) || CAMERA_CATALOG[0];
+      const activeLens = LENS_CATALOG.find(l => l.focalMm === state.optics.lensFocalLengthMm) || LENS_CATALOG[3];
+
+      elValSummaryCam.textContent = activeCam.name;
+      if (activeCam.dimensionality === "3D") {
+        elValSummaryCamParams.textContent = `3D Resolution: ${activeCam.resolutionMP} MP | Z-Accuracy: ${activeCam.zAccuracyMm} mm | Range: ${activeCam.workingDistanceRangeMm[0]}–${activeCam.workingDistanceRangeMm[1]} mm`;
+      } else if (activeCam.technology.includes("Line")) {
+        elValSummaryCamParams.textContent = `Line Width: ${activeCam.widthPx} px | Line Rate: ${activeCam.maxLineRateKhz} kHz | Pixel: ${activeCam.pixelSizeUm} µm`;
+      } else {
+        elValSummaryCamParams.textContent = `Resolution: ${activeCam.resolutionMP} MP (${activeCam.widthPx}×${activeCam.heightPx}) | ${activeCam.shutter.toUpperCase()} Shutter | Pixel: ${activeCam.pixelSizeUm} µm`;
+      }
+      elValSummaryCamSub.textContent = `Part #: ${activeCam.partNumber} | ${activeCam.interface} | Price: € ${activeCam.unitCostEuro.toLocaleString()}`;
+
+      const lensPrice = req.needs3D ? 0 : activeLens.priceEuro;
+      if (req.needs3D) {
+        elValSummaryLens.textContent = "Integrated 3D Factory Optics";
+        elValSummaryLensParams.textContent = "Pre-calibrated stereo / fringe / ToF lens assembly";
+        elValSummaryLensSub.textContent = "Included in 3D scanner unit price (€ 0 extra)";
+      } else {
+        elValSummaryLens.textContent = activeLens.name;
+        elValSummaryLensParams.textContent = `Focal Length: f = ${activeLens.focalMm} mm | Aperture: ${activeLens.aperture} | Circle: ${activeLens.format}`;
+        elValSummaryLensSub.textContent = `Calculated exact f = ${calcData.fl.exactFocalLengthMm} mm | Price: € ${activeLens.priceEuro}`;
+      }
+
+      const illumPrice = req.needs3D ? 0 : 400;
+      elValSummaryIllum.textContent = calcData.illum.illuminationType;
+      elValSummaryIllumParams.textContent = `Mode: ${calcData.exp.strobeRequired ? "LED Strobe Overdrive" : "Continuous LED"} | Filter: ${calcData.illum.filter} | Est.: € ${illumPrice}`;
+
+      const totalFront = activeCam.unitCostEuro + lensPrice + illumPrice;
+      elValSummaryTotalFront.textContent = "€ " + totalFront.toLocaleString();
+    }
+
+    elOverrideScan.addEventListener("change", () => {
+      const calcData = computeStep3Parameters();
+      renderCameras(calcData);
+      renderLenses(calcData);
+      updateSummary(calcData);
+    });
+
+    const initialCalc = computeStep3Parameters();
+    renderCameras(initialCalc);
+    renderLenses(initialCalc);
+    updateSummary(initialCalc);
+  </script>
+</body>
+</html>

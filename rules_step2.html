@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step 2 Decision Rules & Engineering Equations | AI Vision Selection Tool</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .rule-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 960px) {
+      .rule-grid { grid-template-columns: 1fr; }
+    }
+    .rule-box {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+    .rule-box h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 0.65rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .rule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+    .rule-table th {
+      text-align: left;
+      padding: 0.45rem 0.6rem;
+      background: #1e293b;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .rule-table td {
+      padding: 0.5rem 0.6rem;
+      border-bottom: 1px solid #e2e8f0;
+      color: #475569;
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .rule-row-active td {
+      background: #ccfbf1 !important;
+      color: #0f172a !important;
+      font-weight: 600;
+      border-top: 1px solid #14b8a6;
+      border-bottom: 1px solid #14b8a6;
+    }
+    .rule-badge-active {
+      display: none;
+      background: #0f9489;
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 7px;
+      border-radius: 99px;
+      margin-left: 6px;
+      font-weight: 700;
+    }
+    .rule-row-active .rule-badge-active {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="brand-container">
+      <span class="brand-badge">RULE ENGINE INSPECTOR</span>
+      <div>
+        <h1 class="brand-title">Step 2: Decision Rules &amp; Optical Engineering Equations</h1>
+        <p class="brand-subtitle">How setup &amp; use-case requirements are transferred into camera / lens setups</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="step2_requirements.html" class="btn btn-primary">&larr; Back to Step 2: Requirement Definition</a>
+    </div>
+  </header>
+
+  <!-- Step Wizard Bar -->
+  <nav class="wizard-nav">
+    <a href="index.html" class="step-item"><span class="step-num">0</span> Overview</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step1_use_case.html" class="step-item completed"><span class="step-num">1</span> Use Case &amp; NPV</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step2_requirements.html" class="step-item active"><span class="step-num">2</span> Requirement Definition</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step3_hardware_optics.html" class="step-item"><span class="step-num">3</span> Optics &amp; Sensors</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step4_software_ai.html" class="step-item"><span class="step-num">4</span> AI and Software</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step5_integration.html" class="step-item"><span class="step-num">5</span> Integration</a>
+    <span class="step-divider">&gt;</span>
+    <a href="results.html" class="step-item"><span class="step-num">★</span> Results</a>
+  </nav>
+
+  <main class="main-wrapper">
+
+    <section class="card" style="border-top: 3px solid #0f9489; margin-bottom: 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+          <h2 class="card-title" style="margin-bottom: 0.2rem; font-size: 1.15rem;">
+            Visualized Decision Logic &amp; Closed-Form Physics (Step 2)
+          </h2>
+          <p class="card-desc" style="margin-bottom: 0;">
+            Rows highlighted in <strong style="color: #0d746c;">Teal (ACTIVE)</strong> correspond to the current configuration saved in <a href="step2_requirements.html" style="color: #0d746c; font-weight: 600;">Step 2: Requirement Definition</a>.
+          </p>
+        </div>
+        <div id="current-config-summary" class="unit-badge" style="background: #f0fdfa; color: #0d746c; border: 1px solid #0f9489; padding: 0.4rem 0.85rem; font-weight: 600;">
+          Loaded from Active Session
+        </div>
+      </div>
+    </section>
+
+    <div class="rule-grid">
+
+      <!-- RULE BLOCK 2.1: Speed, Scan Mode, Exposure & AI Budget -->
+      <div class="rule-box">
+        <h3>
+          <span>2.1 Speed &amp; Production Requirements</span>
+          <span class="unit-badge" style="background: #f0fdfa; color: #0d746c; border: 1px solid #5eead4;">
+            &rarr; Lighting, Exposure, Area vs. Line Scan, Encapsulation
+          </span>
+        </h3>
+        <table class="rule-table">
+          <thead>
+            <tr>
+              <th style="width: 46%;">IF Input Condition</th>
+              <th>THEN Camera / Lighting Setup</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="rule-R21_STATIC">
+              <td><strong>Stationary / Robot Cell / Indexed</strong><br>($v = 0\text{ m/s}$ during image capture)</td>
+              <td><strong>2D Area Scan</strong> (or 3D Snapshot) + Continuous LED Lighting ($t_{\text{exp}} \le 20\text{ ms}$)<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R21_MOVING_AREA">
+              <td><strong>Singulated Parts on Conveyor</strong><br>($0 &lt; v \le 1.5\text{ m/s}$, width $\le 4500\text{ px}$)</td>
+              <td><strong>2D Area Scan (Global Shutter)</strong><br>Max exposure $t_{\text{exp}} = \frac{0.5 \cdot d_{\text{min}}}{v}$ (if $&lt;100\,\mu\text{s} \rightarrow$ Pulsed LED Strobe)<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R21_FAST_LINE">
+              <td><strong>Fast Conveyor / Ultra-Wide</strong><br>($v &gt; 1.5\text{ m/s}$ or width $&gt; 4500\text{ px}$, 2D)</td>
+              <td><strong>2D Line Scan (Zeilenkamera)</strong><br>Required line rate $f_{\text{line}} = \frac{v}{d_{\text{min}}/3}$ [kHz]<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R21_WEB">
+              <td><strong>Endless Web / Continuous Stream</strong><br>(No discrete part gaps / no parts/min)</td>
+              <td><strong>Strictly 2D Line Scan</strong><br>Continuous encoder-triggered line acquisition<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R21_BUDGET" class="rule-row-active">
+              <td><strong>Throughput $N$ [parts/min] &amp; Parallel AI</strong></td>
+              <td>Cycle window $T_{\text{cycle}} = \frac{60{,}000}{N}\text{ ms}$ &rarr; Parallel ring buffer decouples exposure &amp; GigE transfer from AI inference</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RULE BLOCK 2.2: Field of View & Optical Resolution -->
+      <div class="rule-box">
+        <h3>
+          <span>2.2 Field of View and Optical Resolution</span>
+          <span class="unit-badge" style="background: #eff6ff; color: #0284c7; border: 1px solid #bae6fd;">
+            &rarr; Lens Focal Length / Zoom, Camera Resolution
+          </span>
+        </h3>
+        <table class="rule-table">
+          <thead>
+            <tr>
+              <th style="width: 44%;">Input Variables</th>
+              <th>Deterministic Formula &amp; Active Calculation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="rule-row-active">
+              <td><strong>Smallest Feature ($d_{\text{min}}$) vs. Whole Object ($\text{FoV}_x \times \text{FoV}_y$)</strong></td>
+              <td>
+                <strong>Nyquist Sampling Criterion ($n = 3.0\text{ px}$ per $d_{\text{min}}$):</strong><br>
+                $R_{\text{min}} = \left(\frac{\text{FoV}_x}{d_{\text{min}}}\cdot 3\right) \times \left(\frac{\text{FoV}_y}{d_{\text{min}}}\cdot 3\right)$
+                <div id="trace-eq-res" style="margin-top: 4px; color: #0d746c; font-family: monospace; font-size: 0.82rem;">= 0.0 MP</div>
+              </td>
+            </tr>
+            <tr class="rule-row-active">
+              <td><strong>Camera Distance ($\text{WD}$) &amp; Object Width ($\text{FoV}_x$)</strong></td>
+              <td>
+                <strong>Thin-Lens Magnification ($w_{\text{sensor}} = 8.8\text{ mm}$):</strong><br>
+                $f = \text{WD} \cdot \frac{w_{\text{sensor}}}{\text{FoV}_x + w_{\text{sensor}}} \rightarrow$ Nearest Standard C-Mount Lens $[6, 8, 12, 16, 25, 35, 50, 75, 100\text{ mm}]$
+                <div id="trace-eq-lens" style="margin-top: 4px; color: #0284c7; font-family: monospace; font-size: 0.82rem;">= 16 mm</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RULE BLOCK 2.3: Spatial Dimensionality (2D vs. 3D Camera Types) -->
+      <div class="rule-box">
+        <h3>
+          <span>2.3 Spatial Dimensionality</span>
+          <span class="unit-badge" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a;">
+            &rarr; Camera Type: Stereo, ToF, LiDAR, Structured Light
+          </span>
+        </h3>
+        <table class="rule-table">
+          <thead>
+            <tr>
+              <th style="width: 48%;">IF 3D Position / Depth Condition</th>
+              <th>THEN Recommended Camera Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="rule-R23_2D">
+              <td><strong>3D Position = OFF &amp; Depth = OFF</strong></td>
+              <td><strong>2D Planar Camera</strong> (Area or Line Scan)<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R23_STEREO">
+              <td><strong>3D Position = ON (Robotic Picking)</strong><br>Standard distance ($\text{WD} &lt; 1200\text{ mm}$)</td>
+              <td><strong>Active IR Stereo Camera</strong><br>(Single-shot 6-DoF point cloud, robot-mountable)<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R23_STRUCTURED_LIGHT">
+              <td><strong>3D Position OR Depth = ON (Stationary)</strong><br>$v = 0\text{ m/s}$ + Shiny Metal or $d_{\text{min}} &lt; 0.25\text{ mm}$</td>
+              <td><strong>3D Structured Light (Fringe Projection)</strong><br>(Highest $\mu\text{m}$ depth accuracy on stationary parts)<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R23_TOF_LIDAR">
+              <td><strong>3D Position OR Depth = ON (Large Range)</strong><br>Camera distance $\text{WD} \ge 1200\text{ mm}$ or $d_{\text{min}} \ge 1.5\text{ mm}$</td>
+              <td><strong>Time-of-Flight (ToF) or 3D LiDAR Camera</strong><br>(Palletizing, large logistics FoV, fast snapshot)<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R23_LASER">
+              <td><strong>Depth Info = ON (Topography only)</strong><br>Moving conveyor belt ($v &gt; 0.1\text{ m/s}$)</td>
+              <td><strong>3D Laser Line Triangulation (Profiler)</strong><br>(Scans 3D height profile line-by-line via belt motion)<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RULE BLOCK 2.4: Material Surface & Wavelengths -->
+      <div class="rule-box">
+        <h3>
+          <span>2.4 Material</span>
+          <span class="unit-badge" style="background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe;">
+            &rarr; Polarization Filters, Non-Visible Wavelengths
+          </span>
+        </h3>
+        <table class="rule-table">
+          <thead>
+            <tr>
+              <th style="width: 46%;">IF Material &amp; Surface Condition</th>
+              <th>THEN Filter &amp; Wavelength Setup</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="rule-R24_MATTE">
+              <td><strong>Matte / Diffuse + Visible</strong></td>
+              <td>Direct LED Bar/Ring Light (White) + UV/IR Cut<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R24_SHINY">
+              <td><strong>Shiny / Specular Metal + Visible</strong></td>
+              <td><strong>Linear/Circular Polarization Filter</strong> + Coaxial / Diffuse Dome Blue Light (470 nm)<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R24_GLASS">
+              <td><strong>Transparent Glass / Blister + Visible</strong></td>
+              <td><strong>Telecentric Backlight</strong> + Bandpass Filter<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R24_DARK">
+              <td><strong>Absorbent / Dark Rubber + Visible</strong></td>
+              <td><strong>Low-Angle Dark-Field Grazing Light</strong><span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+            <tr id="rule-R24_NIR_SWIR">
+              <td><strong>Material Detection = YES (NIR / SWIR)</strong></td>
+              <td><strong>Non-Visible Wavelengths:</strong> NIR (850 nm) or SWIR (1050–1550 nm) LED + Bandpass Filter<span class="rule-badge-active">ACTIVE</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Academic Research Prototype &copy; 2026 | Step 2 Decision Rules &amp; Equations</p>
+  </footer>
+
+  <script src="js/data/cameras.js"></script>
+  <script src="js/data/models.js"></script>
+  <script src="js/data/hardware.js"></script>
+  <script src="js/engine/optics.js"></script>
+  <script src="js/engine/latency.js"></script>
+  <script src="js/engine/mcdm.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    function highlightRuleGroup(ruleIds, activeId) {
+      ruleIds.forEach(id => {
+        const row = document.getElementById("rule-" + id);
+        if (row) {
+          if (id === activeId) {
+            row.classList.add("rule-row-active");
+          } else {
+            row.classList.remove("rule-row-active");
+          }
+        }
+      });
+    }
+
+    function renderActiveRules() {
+      const state = AppState.load();
+      const req = state.requirements || {};
+
+      const timingMode = req.timingMode || "conveyor_throughput";
+      const vel = (timingMode === "conveyor_throughput" || timingMode === "endless_web") ? (req.velocityMps ?? 0.8) : 0;
+      const fovX = req.fovXMm ?? 400;
+      const fovY = req.fovYMm ?? 300;
+      const wd = req.workingDistanceMm ?? 600;
+      const dMin = req.minDefectMm ?? 0.2;
+      const isZ = req.needsZHeight ?? false;
+      const isPose = req.needs6DoFPose ?? false;
+      const is3D = isZ || isPose;
+      const geomSetting = req.sensorGeometryMode || "auto";
+      const spec = req.spectralBand || "visible";
+      const surface = req.surfaceType || "matte";
+
+      const derivedScan = OpticsEngine.deriveScanGeometry(timingMode, vel, fovX, dMin, is3D);
+      const effectiveGeom = (geomSetting === "auto") ? derivedScan.geometry : geomSetting;
+
+      // 2.1 Active Rule
+      let activeR21 = derivedScan.ruleId;
+      if (geomSetting === "line_scan" && activeR21 !== "R21_WEB") activeR21 = "R21_FAST_LINE";
+      if (geomSetting === "area_scan" && vel > 0) activeR21 = "R21_MOVING_AREA";
+      highlightRuleGroup(["R21_STATIC", "R21_MOVING_AREA", "R21_FAST_LINE", "R21_WEB"], activeR21);
+
+      // 2.2 Equations
+      const res = OpticsEngine.calculateResolution(effectiveGeom, fovX, fovY, dMin, vel, 3.0);
+      const fl = OpticsEngine.calculateFocalLength(wd, fovX, 8.8);
+      const elTraceRes = document.getElementById("trace-eq-res");
+      const elTraceLens = document.getElementById("trace-eq-lens");
+      if (elTraceRes) {
+        elTraceRes.textContent = res.isLineScan
+          ? `Current: Width = (${fovX}/${dMin})×3 = ${res.minWidthPx} px | f_line = ${res.requiredLineRateKhz} kHz`
+          : `Current: (${fovX}/${dMin}×3) × (${fovY}/${dMin}×3) = ${res.minWidthPx} × ${res.minHeightPx} px = ${res.minTotalMP} MP`;
+      }
+      if (elTraceLens) {
+        elTraceLens.textContent = `Current: Exact f = ${fl.exactFocalLengthMm} mm (WD=${wd} mm, FoV=${fovX} mm) → Standard C-Mount: ${fl.standardLensMm} mm`;
+      }
+
+      // 2.3 Active Rule
+      const dim = OpticsEngine.evaluateDimensionality(isZ, isPose, surface, vel, wd, dMin);
+      highlightRuleGroup(["R23_2D", "R23_STEREO", "R23_STRUCTURED_LIGHT", "R23_TOF_LIDAR", "R23_LASER"], dim.ruleId);
+
+      // 2.4 Active Rule
+      let activeR24 = "R24_MATTE";
+      if (spec === "nir" || spec === "swir") {
+        activeR24 = "R24_NIR_SWIR";
+      } else if (surface === "specular_metal") {
+        activeR24 = "R24_SHINY";
+      } else if (surface === "transparent_glass") {
+        activeR24 = "R24_GLASS";
+      } else if (surface === "dark_absorbent") {
+        activeR24 = "R24_DARK";
+      }
+      highlightRuleGroup(["R24_MATTE", "R24_SHINY", "R24_GLASS", "R24_DARK", "R24_NIR_SWIR"], activeR24);
+
+      const summaryEl = document.getElementById("current-config-summary");
+      if (summaryEl) {
+        summaryEl.textContent = `Active Input: v = ${vel} m/s | FoV = ${fovX}×${fovY} mm | WD = ${wd} mm | d_min = ${dMin} mm`;
+      }
+    }
+
+    window.addEventListener("storage", renderActiveRules);
+    renderActiveRules();
+  </script>
+</body>
+</html>

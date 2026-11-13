@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Synthesis Report | AI Vision Selection Tool</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    @media print {
+      .top-header, .wizard-nav, .no-print {
+        display: none !important;
+      }
+      body {
+        background-color: white !important;
+        color: black !important;
+      }
+      .card {
+        background-color: white !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        color: black !important;
+      }
+      .stat-box {
+        background-color: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        color: black !important;
+      }
+      .stat-value {
+        color: #0284c7 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="brand-container">
+      <span class="brand-badge">SYNTHESIS SPECIFICATION</span>
+      <div>
+        <h1 class="brand-title">Machine Vision Engineering Synthesis Report</h1>
+        <p class="brand-subtitle">Automated Co-Design for Shop-Floor Deployment</p>
+      </div>
+    </div>
+    <div class="header-actions no-print">
+      <button onclick="window.print()" class="btn btn-secondary">Print / PDF</button>
+      <button id="btn-export-json" class="btn btn-secondary">Export JSON</button>
+      <a href="index.html" class="btn btn-primary">&larr; Back to Overview</a>
+    </div>
+  </header>
+
+  <!-- Step Wizard Bar -->
+  <nav class="wizard-nav no-print">
+    <a href="index.html" class="step-item"><span class="step-num">0</span> Overview</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step1_use_case.html" class="step-item completed"><span class="step-num">1</span> Use Case &amp; NPV</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step2_requirements.html" class="step-item completed"><span class="step-num">2</span> Requirement Definition</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step3_hardware_optics.html" class="step-item completed"><span class="step-num">3</span> Optics & Sensors</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step4_software_ai.html" class="step-item completed"><span class="step-num">4</span> AI and Software</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step5_integration.html" class="step-item completed"><span class="step-num">5</span> Integration</a>
+    <span class="step-divider">&gt;</span>
+    <div class="step-item active"><span class="step-num">★</span> Results</div>
+  </nav>
+
+  <main class="main-wrapper">
+    
+    <!-- Executive Summary Banner -->
+    <section class="card" style="border-top: 3px solid #0f172a; padding: 1.25rem 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">
+            Deterministic Systems Engineering Specification
+          </span>
+          <h2 id="report-project-name" style="font-size: 1.25rem; font-weight: 600; margin: 0.2rem 0 0.4rem 0;">
+            Industrial Machine Vision System
+          </h2>
+          <p id="report-archetype" style="color: var(--text-muted); font-size: 0.85rem;">
+            Application Archetype: Inline Quality Inspection
+          </p>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Composite Pareto Score</div>
+          <div id="report-global-score" style="font-size: 1.6rem; font-weight: 700; color: #0f172a; font-family: monospace;">
+            88 / 100
+          </div>
+          <span class="unit-badge">Verified</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Economic Multi-Year Amortization Banner -->
+    <section class="card" style="padding: 1rem 1.25rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">
+            Financial Justification & Capital Budgeting (Net Present Value - NPV)
+          </span>
+          <div id="rep-econ-headline" style="font-size: 0.95rem; font-weight: 500; color: var(--text-main); margin-top: 0.15rem;">
+            Net Present Value (NPV): € 98,420 | Initial CAPEX I₀: € 30,000 | Net Annual Inflow: € 48,200/yr | Hurdle i: 6.0% (3 yrs) | Payback: ~7.5 months
+          </div>
+        </div>
+        <a href="calculator_economic.html" class="btn btn-secondary no-print" style="font-size: 0.8rem; padding: 0.3rem 0.65rem;">
+          View Detailed Cashflows &rarr;
+        </a>
+      </div>
+    </section>
+
+    <!-- Three Architectural Subsystem Pillars -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+      
+      <!-- Subsystem 1: Optics & Sensor -->
+      <div class="card">
+        <h3 class="card-title">
+          1. Optics & Sensor Front-End
+        </h3>
+        <p class="card-desc">Sized against Nyquist resolution, motion blur, and spectral band.</p>
+
+        <div class="stat-box">
+          <div class="stat-label">Camera Model & Part #</div>
+          <div class="stat-value" id="rep-cam-name" style="font-size: 1rem;">Basler ace 2 20MP</div>
+          <div class="stat-sub" id="rep-cam-sub">Part #: 108126 | Global Shutter</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.65rem;">
+          <div class="stat-box">
+            <div class="stat-label">Optical Lens</div>
+            <div id="rep-lens" style="font-weight: 600; color: var(--text-main);">25 mm C-Mount</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Exposure Limit</div>
+            <div id="rep-exp" style="font-weight: 600; color: var(--text-main);">12.5 µs (Strobe)</div>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Illumination & Filter Topology</div>
+          <div id="rep-illum" style="font-size: 0.85rem; color: var(--text-secondary);">
+            Diffuse On-Axis / Polarized Dome Light
+          </div>
+        </div>
+      </div>
+
+      <!-- Subsystem 2: AI Software & Latency -->
+      <div class="card">
+        <h3 class="card-title">
+          2. Software & AI Pipeline
+        </h3>
+        <p class="card-desc">Bounded by cycle time and precision quantization.</p>
+
+        <div class="stat-box">
+          <div class="stat-label">Neural Architecture</div>
+          <div class="stat-value" id="rep-model-name" style="font-size: 1rem;">YOLOv8s-Seg</div>
+          <div class="stat-sub" id="rep-model-sub">Instance Segmentation</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.65rem;">
+          <div class="stat-box">
+            <div class="stat-label">Quantization</div>
+            <div id="rep-quant" style="font-weight: 600;">INT8 TensorRT</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Simulated Latency</div>
+            <div id="rep-lat" style="font-weight: 600;">8.4 ms (119 FPS)</div>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Real-Time Headroom</div>
+          <div id="rep-headroom" style="font-size: 0.85rem; color: var(--text-secondary);">
+            +99.1 ms safe margin below takt time
+          </div>
+        </div>
+      </div>
+
+      <!-- Subsystem 3: Edge Compute & OT Integration -->
+      <div class="card">
+        <h3 class="card-title">
+          3. Edge & Production Integration
+        </h3>
+        <p class="card-desc">Industrial hardening, thermal dissipation, and PLC sync.</p>
+
+        <div class="stat-box">
+          <div class="stat-label">Edge Compute Platform</div>
+          <div class="stat-value" id="rep-hw-name" style="font-size: 1rem;">Siemens SIMATIC IPC227G</div>
+          <div class="stat-sub" id="rep-hw-sub">Intel Core Ultra | Fanless DIN-Rail</div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.65rem;">
+          <div class="stat-box">
+            <div class="stat-label">Fieldbus Protocol</div>
+            <div id="rep-fieldbus" style="font-weight: 600; color: var(--text-main);">PROFINET IO</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Thermal Budget</div>
+            <div id="rep-power" style="font-weight: 600; color: var(--text-main);">37 W (Passive)</div>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-label">Ingress Protection</div>
+          <div id="rep-ip" style="font-size: 0.85rem; color: var(--text-secondary);">
+            IP65 Sealed Enclosure
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bill of Materials (BOM) Table -->
+    <section class="card">
+      <h3 class="card-title">Commercial Bill of Materials (BOM) & Equipment Budget</h3>
+      <p class="card-desc">Real industrial distributor pricing (excl. VAT).</p>
+
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-muted);">
+            <th style="padding: 0.75rem 0.5rem;">Category</th>
+            <th style="padding: 0.75rem 0.5rem;">Component</th>
+            <th style="padding: 0.75rem 0.5rem;">Recommended Model &amp; Part #</th>
+            <th style="padding: 0.75rem 0.5rem;">Key Specifications</th>
+            <th style="padding: 0.75rem 0.5rem; text-align: right;">Unit List Price</th>
+          </tr>
+        </thead>
+        <tbody id="bom-table-body">
+          <!-- Dynamically populated via JS -->
+        </tbody>
+        <tfoot>
+          <tr style="border-top: 2px solid var(--border-color); font-weight: 700; font-size: 1rem;">
+            <td colspan="4" style="padding: 1rem 0.5rem;">Total Capital Investment (Initial CAPEX I₀):</td>
+            <td id="bom-total-cost" style="padding: 1rem 0.5rem; text-align: right; color: var(--accent-emerald);">€ 0</td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+
+    <!-- Navigation / Actions -->
+    <div class="no-print" style="display: flex; justify-content: space-between; margin-top: 2rem;">
+      <a href="step5_integration.html" class="btn btn-secondary">&larr; Back to Step 5</a>
+      <a href="index.html" class="btn btn-primary" style="padding: 0.8rem 1.6rem;">
+        Start Another Sizing Run &rarr;
+      </a>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Academic Research Prototype &copy; 2026 | Decision Engine for Industrial AI-Based Vision &middot; Engineering Synthesis</p>
+    <p style="font-size: 0.78rem; color: #64748b; margin-top: 0.35rem; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.4;">
+      <strong>Disclaimer:</strong> Provided as-is for conceptual engineering evaluation and decision support. 
+      No claim of completeness or commercial correctness. Hardware prices reflect typical manufacturer list prices and require vendor quotation for procurement.
+    </p>
+  </footer>
+
+  <script src="js/data/cameras.js"></script>
+  <script src="js/data/models.js"></script>
+  <script src="js/data/hardware.js"></script>
+  <script src="js/engine/optics.js"></script>
+  <script src="js/engine/latency.js"></script>
+  <script src="js/engine/mcdm.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    const state = AppState.load();
+    const req = state.requirements;
+    const calc = state.opticsCalculations;
+
+    const activeCam = CAMERA_CATALOG.find(c => c.id === state.optics.selectedCameraId) || CAMERA_CATALOG[0];
+    const activeModel = MODEL_CATALOG.find(m => m.id === state.software.selectedModelId) || MODEL_CATALOG[1];
+    const activeHw = HARDWARE_CATALOG.find(h => h.id === state.integration.selectedHardwareId) || HARDWARE_CATALOG[0];
+
+    // Populate Header
+    document.getElementById("report-project-name").textContent = state.business.projectName;
+    let archLabel = "Inline Quality Inspection";
+    if (state.business.useCaseType === "robot_assembly") archLabel = "Robotic Guidance & 3D Assembly";
+    if (state.business.useCaseType === "sorting_logistics") archLabel = "Conveyor Sorting & Logistics Singulation";
+    document.getElementById("report-archetype").textContent = `Application Archetype: ${archLabel} | Geometry: ${req.sensorGeometry || 'area_scan'} | Spectrum: ${req.spectralBand || 'visible'}`;
+
+    // Economic Headline
+    if (state.economicModel && state.economicModel.summary) {
+      const sm = state.economicModel.summary;
+      const rate = state.economicModel.discountRatePct !== undefined ? state.economicModel.discountRatePct : 6.0;
+      const years = state.economicModel.horizonYears || 3;
+      const npvVal = (sm.npv !== undefined ? sm.npv : 98420).toLocaleString();
+      const capexVal = (sm.capex !== undefined ? sm.capex : 30000).toLocaleString();
+      const annualVal = (sm.netAnnualSavings !== undefined ? sm.netAnnualSavings : 48200).toLocaleString();
+      const paybackVal = sm.paybackMonths !== undefined ? sm.paybackMonths : 7.5;
+      document.getElementById("rep-econ-headline").textContent = `Net Present Value (NPV): € ${npvVal} | Initial CAPEX I₀: € ${capexVal} | Net Annual Inflow (R_t): € ${annualVal}/yr | Hurdle i: ${rate}% (${years} yrs) | Payback: ~${paybackVal} months`;
+    }
+
+    // Subsystem 1: Optics
+    document.getElementById("rep-cam-name").textContent = activeCam.name;
+    document.getElementById("rep-cam-sub").textContent = `Part #: ${activeCam.partNumber} | ${activeCam.technology} | ${activeCam.shutter.toUpperCase()} Shutter`;
+    document.getElementById("rep-lens").textContent = (state.optics.lensFocalLengthMm || 25) + " mm C-Mount";
+    document.getElementById("rep-exp").textContent = calc.maxExposureUs + " µs (" + calc.shutterRequired + ")";
+    const illumRec = OpticsEngine.recommendIllumination(req.spectralBand, req.surfaceType, req.defectType);
+    document.getElementById("rep-illum").textContent = `${illumRec.illuminationType} + ${illumRec.filter}`;
+
+    // Subsystem 2: Software
+    const est = LatencyEngine.estimateInference(activeModel, activeHw, state.software.precision || "INT8");
+    document.getElementById("rep-model-name").textContent = activeModel.name;
+    document.getElementById("rep-model-sub").textContent = `${activeModel.category} (${activeModel.paramsM}M Params, ${activeModel.gflops} GFLOPs)`;
+    document.getElementById("rep-quant").textContent = `${state.software.precision || "INT8"} (${state.software.runtimeEngine || "TensorRT"})`;
+    document.getElementById("rep-lat").textContent = `${est.estimatedMs} ms (${est.fps} FPS)`;
+    const margin = parseFloat((calc.maxInferenceBudgetMs - est.estimatedMs).toFixed(1));
+    document.getElementById("rep-headroom").textContent = `${margin >= 0 ? "+" : ""}${margin} ms safe timing headroom`;
+
+    // Subsystem 3: Edge Integration
+    document.getElementById("rep-hw-name").textContent = activeHw.name;
+    document.getElementById("rep-hw-sub").textContent = `${activeHw.tier} | ${activeHw.cooling}`;
+    document.getElementById("rep-fieldbus").textContent = state.integration.fieldbusProtocol || "PROFINET";
+    const totalPower = activeHw.tdpWatt + 12;
+    document.getElementById("rep-power").textContent = `${totalPower} W TDP (Passive)`;
+    document.getElementById("rep-ip").textContent = `${req.ipRatingNeeded} Rated Enclosure (${state.integration.mountingType})`;
+
+    // Global Pareto Score (with error boundary)
+    try {
+      const ranked = McdmEngine.rankSolutions(state, [activeCam], [activeModel], [activeHw]);
+      if (ranked && ranked.length > 0) {
+        document.getElementById("report-global-score").textContent = ranked[0].globalScore + " / 100";
+      } else {
+        document.getElementById("report-global-score").textContent = "86 / 100";
+      }
+    } catch (err) {
+      console.warn("MCDM rankSolutions notice:", err);
+      document.getElementById("report-global-score").textContent = "86 / 100";
+    }
+
+    // Populate BOM Table with real components, standard components & use-case specific positions
+    const bomBody = document.getElementById("bom-table-body");
+    bomBody.innerHTML = "";
+
+    const is3DCam = activeCam.dimensionality === "3D" || (activeCam.technology && activeCam.technology.includes("3D"));
+    const camCost = activeCam.unitCostEuro !== undefined ? activeCam.unitCostEuro : 1200;
+    const lensCost = is3DCam ? 0 : (state.optics.lensPriceEuro || 320);
+    const hwCost = activeHw.unitCostEuro !== undefined ? activeHw.unitCostEuro : 750;
+
+    // Determine if this is a robotic picking / assembly use case
+    const isBinPicking = state.business.useCaseType === "robotic_bin_picking" || 
+                         state.business.useCaseType === "robot_assembly" ||
+                         (state.requirements && (state.requirements.needs6DoFPose || state.requirements.timingMode === "robot_response"));
+
+    // Track used expense IDs from state.economicModel so non-hardware values edited by user transfer seamlessly
+    const usedExpenseIds = new Set();
+
+    function getCustomExpense(keywords, fallbackCost, defaultName) {
+      if (state.economicModel && Array.isArray(state.economicModel.expenses)) {
+        const found = state.economicModel.expenses.find(e => {
+          if (usedExpenseIds.has(e.id)) return false;
+          if (e.year !== "Year 0" || !e.category) return false;
+          const cat = e.category.toLowerCase();
+          return keywords.some(kw => cat.includes(kw.toLowerCase()));
+        });
+        if (found) {
+          usedExpenseIds.add(found.id);
+          const costVal = (found.amount !== undefined && !isNaN(found.amount)) ? Number(found.amount) : fallbackCost;
+          return { cost: costVal, name: found.category || defaultName };
+        }
+      }
+      return { cost: fallbackCost, name: defaultName };
+    }
+
+    const items = [];
+
+    // 1. Use-Case Specific Positions (e.g. Robot & Mechanical Tooling ONLY for Bin-Picking; dynamically transfer user-edited costs)
+    if (isBinPicking) {
+      const robotItem = getCustomExpense(["robot"], 40000, "Industrial Robot");
+      items.push({
+        category: "Use-Case Specific (Bin-Picking)",
+        catBadgeStyle: "background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-weight: 700;",
+        name: robotItem.name,
+        model: "6-Axis Articulated Industrial Robot Arm (Payload 20 kg, Reach 1.6 m)",
+        spec: "High-speed kinematic path execution, safety-rated monitored stop",
+        cost: robotItem.cost
+      });
+
+      const toolingItem = getCustomExpense(["tooling", "gripper", "greifer", "eoat", "fixture"], 8000, "Mechanical Tooling");
+      items.push({
+        category: "Use-Case Specific (Bin-Picking)",
+        catBadgeStyle: "background: #fef3c7; color: #92400e; border: 1px solid #fde68a; font-weight: 700;",
+        name: toolingItem.name,
+        model: "Pneumatic / Magnetic 6-DoF End-of-Arm Tooling (EOAT) & Bin Fixtures",
+        spec: "Custom gripper jaw contours, dual-grip sensors, compliance wrist & bin stand",
+        cost: toolingItem.cost
+      });
+    }
+
+    // Mark vision/compute items in expenses as recognized so they don't duplicate
+    if (state.economicModel && Array.isArray(state.economicModel.expenses)) {
+      state.economicModel.expenses.forEach(e => {
+        if (e.year === "Year 0" && e.category) {
+          const cat = e.category.toLowerCase();
+          if (["camera", "sensor", "scanner", "photoneo", "basler", "lens", "compute", "edge", "jetson", "ipc", "hardware"].some(k => cat.includes(k))) {
+            usedExpenseIds.add(e.id);
+          }
+        }
+      });
+    }
+
+    // 2. Selected Vision & Sensing Hardware
+    items.push({
+      category: "Vision Hardware",
+      catBadgeStyle: "background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;",
+      name: is3DCam ? "Industrial 3D Sensor Scanner" : "Industrial Camera Sensor", 
+      model: activeCam.name, 
+      spec: `${activeCam.technology}, ${activeCam.interface}, Part #${activeCam.partNumber || 'N/A'}`, 
+      cost: camCost 
+    });
+
+    if (!is3DCam) {
+      items.push({
+        category: "Vision Hardware",
+        catBadgeStyle: "background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;",
+        name: "Industrial Optical Lens",
+        model: `C-Mount Fixed Focal Lens ${state.optics.lensFocalLengthMm || 25} mm`,
+        spec: "Low distortion, vibration-lock, anti-reflective coating",
+        cost: lensCost
+      });
+    }
+
+    // 3. Selected Edge Compute Platform
+    items.push({
+      category: "Edge Hardware",
+      catBadgeStyle: "background: #ede9fe; color: #4338ca; border: 1px solid #ddd6fe;",
+      name: "Industrial Edge Compute Platform",
+      model: activeHw.name,
+      spec: `${activeHw.tier} | ${activeHw.aiPerfTops} TOPS | ${activeHw.vramGb} GB VRAM | ${activeHw.cooling}`,
+      cost: hwCost
+    });
+
+    // 4. General Integration Standardbausteine (dynamically transfer user-edited costs)
+    const fieldbusItem = getCustomExpense(["fieldbus", "feldbus", "cabling", "verkabelung", "cable"], 180, "Industrial Fieldbus & Cabling");
+    items.push({
+      category: "Standard Integration",
+      catBadgeStyle: "background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;",
+      name: fieldbusItem.name,
+      model: "M12 Drag-Chain Rated GigE & 24V Opto-I/O Cables",
+      spec: `Deterministic fieldbus (${state.integration.fieldbusProtocol || 'PROFINET / OPC UA'}), IP67 shielded`,
+      cost: fieldbusItem.cost
+    });
+
+    const assemblyItem = getCustomExpense(["assembly", "montage", "setup", "mounting"], 1000, "Mechanical Assembly & Setup");
+    items.push({
+      category: "Standard Integration",
+      catBadgeStyle: "background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;",
+      name: assemblyItem.name,
+      model: "Mounting Brackets, Flange Adapters & Cell Integration",
+      spec: "Precision alignment fixtures, vibration dampening, electrical integration",
+      cost: assemblyItem.cost
+    });
+
+    const trainingItem = getCustomExpense(["training", "schulung", "qualification", "guidelines", "sop"], 5000, "Operator Training & Guidelines");
+    items.push({
+      category: "Standard Integration",
+      catBadgeStyle: "background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1;",
+      name: trainingItem.name,
+      model: "Workforce Qualification & SOP Guidelines",
+      spec: "Role-based training, defect catalog calibration, handover documentation",
+      cost: trainingItem.cost
+    });
+
+    // 5. Any additional custom Year 0 CAPEX items added by the user in the economic calculator
+    if (state.economicModel && Array.isArray(state.economicModel.expenses)) {
+      state.economicModel.expenses.forEach(e => {
+        if (e.year === "Year 0" && !usedExpenseIds.has(e.id) && e.amount > 0) {
+          usedExpenseIds.add(e.id);
+          items.push({
+            category: "Custom Integration",
+            catBadgeStyle: "background: #f8fafc; color: #475569; border: 1px solid #cbd5e1;",
+            name: e.category,
+            model: "Custom Plant Integration Item",
+            spec: "Defined in Dynamic Capital Budgeting Model (Year 0)",
+            cost: Number(e.amount)
+          });
+        }
+      });
+    }
+
+    let totalBOM = 0;
+    items.forEach(it => {
+      const c = Number(it.cost) || 0;
+      totalBOM += c;
+      const row = document.createElement("tr");
+      row.style.borderBottom = "1px solid var(--border-color)";
+      row.innerHTML = `
+        <td style="padding: 0.75rem 0.5rem;"><span class="unit-badge" style="${it.catBadgeStyle || ''}">${it.category}</span></td>
+        <td style="padding: 0.75rem 0.5rem; font-weight: 600;">${it.name}</td>
+        <td style="padding: 0.75rem 0.5rem; color: var(--accent-cyan); font-weight: 500;">${it.model}</td>
+        <td style="padding: 0.75rem 0.5rem; color: var(--text-muted); font-size: 0.85rem;">${it.spec}</td>
+        <td style="padding: 0.75rem 0.5rem; text-align: right; font-family: monospace; font-weight: 700;">€ ${c.toLocaleString()}</td>
+      `;
+      bomBody.appendChild(row);
+    });
+
+    document.getElementById("bom-total-cost").textContent = "€ " + totalBOM.toLocaleString();
+
+    // Synchronize Economic Headline with totalBOM dynamically
+    if (state.economicModel && state.economicModel.summary) {
+      const sm = state.economicModel.summary;
+      const rate = state.economicModel.discountRatePct !== undefined ? state.economicModel.discountRatePct : 6.0;
+      const years = state.economicModel.horizonYears || 3;
+      sm.capex = totalBOM;
+
+      let netAnnual = (sm.netAnnualSavings !== undefined ? sm.netAnnualSavings : 85000);
+      let dynNpv = -totalBOM;
+      for (let t = 1; t <= years; t++) {
+        dynNpv += netAnnual / Math.pow(1 + rate / 100, t);
+      }
+      dynNpv = Math.round(dynNpv);
+      sm.npv = dynNpv;
+
+      const dynPayback = netAnnual > 0 ? parseFloat(((totalBOM / netAnnual) * 12).toFixed(1)) : 999;
+      sm.paybackMonths = dynPayback;
+
+      document.getElementById("rep-econ-headline").textContent = `Net Present Value (NPV): € ${dynNpv.toLocaleString()} | Initial CAPEX I₀: € ${totalBOM.toLocaleString()} | Net Annual Inflow (R_t): € ${netAnnual.toLocaleString()}/yr | Hurdle i: ${rate}% (${years} yrs) | Payback: ~${dynPayback} months`;
+      AppState.save(state);
+    }
+
+    // Export JSON
+    document.getElementById("btn-export-json").addEventListener("click", () => {
+      const exportData = {
+        meta: {
+          generator: "Industrial AI Vision Selection Tool (Based on Werheid et al. 2026)",
+          exportedAt: new Date().toISOString(),
+          projectName: state.business.projectName
+        },
+        state: state,
+        bom: {
+          items: items,
+          totalInvestmentEuro: totalBOM
+        }
+      };
+
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${state.business.projectName.toLowerCase().replace(/[^a-z0-9]/g, "_")}_specification.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>

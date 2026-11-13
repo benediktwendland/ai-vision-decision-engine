@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step 2: Requirement Definition | AI Vision Selection Tool</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="brand-container">
+      <span class="brand-badge">STEP 2</span>
+      <div>
+        <h1 class="brand-title">Requirement Definition</h1>
+        <p class="brand-subtitle">Capture setup and production requirements before hardware &amp; AI calculation</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="rules_step2.html" target="_blank" class="btn btn-secondary">🔍 Open Decision Rules &amp; Equations &nearr;</a>
+      <a href="step1_use_case.html" class="btn btn-secondary">&larr; Step 1</a>
+      <a href="step3_hardware_optics.html" class="btn btn-primary" id="btn-next-top">Next: Step 3 (Optics Sizing) &rarr;</a>
+    </div>
+  </header>
+
+  <!-- Step Wizard Bar -->
+  <nav class="wizard-nav">
+    <a href="index.html" class="step-item"><span class="step-num">0</span> Overview</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step1_use_case.html" class="step-item completed"><span class="step-num">1</span> Use Case &amp; NPV</a>
+    <span class="step-divider">&gt;</span>
+    <div class="step-item active"><span class="step-num">2</span> Requirement Definition</div>
+    <span class="step-divider">&gt;</span>
+    <a href="step3_hardware_optics.html" class="step-item"><span class="step-num">3</span> Optics &amp; Sensors</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step4_software_ai.html" class="step-item"><span class="step-num">4</span> AI and Software</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step5_integration.html" class="step-item"><span class="step-num">5</span> Integration</a>
+    <span class="step-divider">&gt;</span>
+    <a href="results.html" class="step-item"><span class="step-num">★</span> Results</a>
+  </nav>
+
+  <main class="main-wrapper">
+    <div class="grid-two-column">
+      
+      <!-- Left Column: Pure Requirement Input Form (2.1 - 2.4) -->
+      <div>
+        
+        <!-- 2.1 Speed and Production Requirements -->
+        <div class="card">
+          <h2 class="card-title">2.1 Speed and Production Requirements</h2>
+          <p class="card-desc">Throughput rate (parts/min) or conveyor belt speed (m/s), parallel processing, and protection.</p>
+
+          <div class="form-group">
+            <label class="form-label" for="timing-mode">Production Motion Mode</label>
+            <select id="timing-mode" class="form-control">
+              <option value="conveyor_throughput">Singulated Parts on Conveyor (Belt Speed m/s + Throughput parts/min)</option>
+              <option value="endless_web">Endless Web / Continuous Stream (Conveyor Belt Speed m/s ONLY)</option>
+              <option value="robot_response">Robotic Cell / Pick-and-Place (Stationary Capture, v = 0 m/s)</option>
+              <option value="discrete_takt">Discrete Indexed Station (Stop-and-Go Takt, v = 0 m/s)</option>
+            </select>
+          </div>
+
+          <!-- Dynamic Timing Fields -->
+          <div id="group-conveyor-timing" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group" id="group-throughput-field">
+              <label class="form-label" for="conveyor-throughput">
+                Throughput Rate <span class="unit-badge">[parts/min]</span>
+              </label>
+              <input type="number" id="conveyor-throughput" class="form-control" value="240" min="1" max="6000" step="10">
+            </div>
+
+            <div class="form-group" id="group-velocity-field">
+              <label class="form-label" for="velocity">
+                Conveyor Belt Speed ($v$) <span class="unit-badge">[m/s]</span>
+              </label>
+              <input type="number" id="velocity" class="form-control" value="0.8" min="0" max="10" step="0.1">
+            </div>
+          </div>
+
+          <div id="group-robot-timing" style="display: none; grid-template-columns: 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="robot-response">
+                Robot Guidance Response Window <span class="unit-badge">[ms]</span>
+              </label>
+              <input type="number" id="robot-response" class="form-control" value="300" min="20" max="5000" step="20">
+            </div>
+          </div>
+
+          <div id="group-station-timing" style="display: none; grid-template-columns: 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="station-takt">
+                Discrete Station Takt Time (v = 0 m/s during capture) <span class="unit-badge">[ms]</span>
+              </label>
+              <input type="number" id="station-takt" class="form-control" value="500" min="50" max="10000" step="50">
+            </div>
+          </div>
+
+          <!-- Parallel (AI) Processing Necessary? -->
+          <div style="margin-top: 0.5rem; margin-bottom: 0.85rem; padding: 0.65rem 0.85rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm);">
+            <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+              <div>
+                <strong style="color: #0f172a; font-size: 0.85rem;">Parallel (AI) processing necessary?</strong>
+                <div style="font-size: 0.8rem; color: #64748b;">
+                  Decouples image capture &amp; transfer from AI inference via asynchronous ring buffer.
+                </div>
+              </div>
+              <input type="checkbox" id="chk-parallel-processing" checked style="width: 18px; height: 18px; accent-color: #0f172a;">
+            </label>
+          </div>
+
+          <!-- Dust, Water and Vibration Protection -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="ip-rating">Dust, Water and Vibration Protection?</label>
+            <select id="ip-rating" class="form-control">
+              <option value="IP65" selected>Yes — IP65 / IP67 Ruggedized + Vibration Protection (Washdown, dust, robot arm)</option>
+              <option value="IP40">Standard — IP40 Industrial Housing (Protected factory hall)</option>
+              <option value="IP20">No — IP20 Laboratory / Clean Test Bench Only</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2.2 Field of View and Optical Resolution -->
+        <div class="card">
+          <h2 class="card-title">2.2 Field of View and Optical Resolution</h2>
+          <p class="card-desc">Field of view, camera distance from object, and smallest feature vs. whole object size.</p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="fov-x">
+                Field of View / Whole Object Width ($FoV_x$) <span class="unit-badge">[mm]</span>
+              </label>
+              <input type="number" id="fov-x" class="form-control" value="400" min="10" max="3000" step="10">
+            </div>
+
+            <div class="form-group" id="group-fov-y">
+              <label class="form-label" for="fov-y">
+                Field of View / Whole Object Height ($FoV_y$) <span class="unit-badge">[mm]</span>
+              </label>
+              <input type="number" id="fov-y" class="form-control" value="300" min="10" max="3000" step="10">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="working-distance">
+                Camera Distance from Object ($WD$) <span class="unit-badge">[mm]</span>
+              </label>
+              <input type="number" id="working-distance" class="form-control" value="600" min="50" max="5000" step="50">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="min-defect">
+                Smallest Feature vs. Whole Object ($d_{\text{min}}$) <span class="unit-badge">[mm]</span>
+              </label>
+              <input type="number" id="min-defect" class="form-control" value="0.2" min="0.005" max="10" step="0.01">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.3 Spatial Dimensionality -->
+        <div class="card">
+          <h2 class="card-title">2.3 Spatial Dimensionality</h2>
+          <p class="card-desc">Specify whether 3D object position or depth information is necessary.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.25rem;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; padding: 0.5rem 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm);">
+              <input type="checkbox" id="chk-6dof-pose">
+              <span><strong>3D-position of object necessary?</strong> (e.g. 6-DoF pose $X, Y, Z, \text{Roll, Pitch, Yaw}$ for robotic picking)</span>
+            </label>
+
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; padding: 0.5rem 0.75rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: var(--radius-sm);">
+              <input type="checkbox" id="chk-z-height">
+              <span><strong>Depth information necessary?</strong> (Z-height topography, volume profile, or step measurement)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 2.4 Material -->
+        <div class="card">
+          <h2 class="card-title">2.4 Material</h2>
+          <p class="card-desc">Surface optical behavior (matte, shiny, transparent, absorbent) and material detection.</p>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="surface-type">Matte vs. Shiny vs. Transparent vs. Absorbent</label>
+              <select id="surface-type" class="form-control">
+                <option value="matte" selected>Matte / Diffuse (Plastics, unpolished wood, parcels)</option>
+                <option value="specular_metal">Shiny / Specular Metal (Mirror reflections, oil film)</option>
+                <option value="transparent_glass">Transparent / Translucent (Glass, clear blisters)</option>
+                <option value="dark_absorbent">Absorbent / Dark (Black rubber, tires, carbon)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="spectral-band">Material Detection Necessary? (Wavelength Band)</label>
+              <select id="spectral-band" class="form-control">
+                <option value="visible" selected>No — Standard Visible Spectrum (Mono / RGB 400–700 nm)</option>
+                <option value="nir">Yes — Near-Infrared NIR (750–1050 nm: Polymers, Organic, Packaging)</option>
+                <option value="swir">Yes — Short-Wave Infrared SWIR (1000–1700 nm: Moisture, Silicon)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- EXPLICIT UPDATE PARAMETERS BUTTON -->
+        <div style="margin: 1.25rem 0 1.5rem 0; display: flex; gap: 0.75rem; align-items: center;">
+          <button id="btn-update-req" type="button" class="btn btn-primary" style="padding: 0.65rem 1.4rem; background: #0f9489; border-color: #0d746c;">
+            ↻ Update Requirements Summary
+          </button>
+          <span id="lbl-update-status" style="color: #0d746c; font-size: 0.85rem; font-weight: 600; display: none;">
+            ✓ Requirements updated!
+          </span>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+          <a href="step1_use_case.html" class="btn btn-secondary">&larr; Back to Step 1</a>
+          <a href="step3_hardware_optics.html" class="btn btn-primary" style="padding: 0.8rem 1.6rem;">
+            Proceed to Step 3: Calculate Optics &amp; Sensors &rarr;
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Simple Line-by-Line Requirement Summary (1 Parameter per Line) -->
+      <div>
+        <div class="card" style="position: sticky; top: 80px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <h3 class="card-title" style="margin-bottom: 0;">Defined Requirements Summary</h3>
+            <button id="btn-update-req-right" type="button" class="btn btn-secondary" style="font-size: 0.78rem; padding: 0.25rem 0.65rem;">
+              ↻ Update
+            </button>
+          </div>
+          <p class="card-desc">Overview of all entered parameters (camera &amp; AI calculations follow in Steps 3 &amp; 4).</p>
+
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: #0f172a; background: #f8fafc; padding: 1rem 1.1rem; border: 1px solid #e2e8f0; border-radius: var(--radius-sm);">
+            <div><strong>Production Mode:</strong> <span id="sum-prod-mode">Singulated Parts on Conveyor</span></div>
+            <div id="row-sum-throughput"><strong>Throughput Rate:</strong> <span id="sum-throughput">240 parts/min</span></div>
+            <div id="row-sum-speed"><strong>Conveyor Belt Speed:</strong> <span id="sum-speed">0.8 m/s</span></div>
+            <div><strong>Parallel (AI) Processing:</strong> <span id="sum-parallel">Yes</span></div>
+            <div><strong>Dust / Water / Vibration Protection:</strong> <span id="sum-ip">IP65</span></div>
+            <hr style="border: 0; border-top: 1px solid #cbd5e1; margin: 0.25rem 0;">
+            <div><strong>Field of View:</strong> <span id="sum-fov">400 × 300 mm</span></div>
+            <div><strong>Camera Distance (WD):</strong> <span id="sum-wd">600 mm</span></div>
+            <div><strong>Smallest Feature Size:</strong> <span id="sum-dmin">0.2 mm</span></div>
+            <hr style="border: 0; border-top: 1px solid #cbd5e1; margin: 0.25rem 0;">
+            <div><strong>3D Position Necessary:</strong> <span id="sum-pose">No</span></div>
+            <div><strong>Depth Information Necessary:</strong> <span id="sum-depth">No</span></div>
+            <hr style="border: 0; border-top: 1px solid #cbd5e1; margin: 0.25rem 0;">
+            <div><strong>Surface Material:</strong> <span id="sum-surface">Matte / Diffuse</span></div>
+            <div><strong>Material Detection (Spectrum):</strong> <span id="sum-spectrum">Visible (400–700 nm)</span></div>
+          </div>
+
+          <div style="margin-top: 1rem;">
+            <a href="step3_hardware_optics.html" class="btn btn-primary" style="width: 100%; text-align: center; display: block;">
+              Proceed to Step 3: Optics &amp; Sensors &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>Academic Research Prototype &copy; 2026 | Step 2: Requirement Definition</p>
+  </footer>
+
+  <script src="js/data/cameras.js"></script>
+  <script src="js/data/models.js"></script>
+  <script src="js/data/hardware.js"></script>
+  <script src="js/engine/optics.js"></script>
+  <script src="js/engine/latency.js"></script>
+  <script src="js/engine/mcdm.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    const state = AppState.load();
+
+    // DOM Elements
+    const elSpectrum = document.getElementById("spectral-band");
+    const elTimingMode = document.getElementById("timing-mode");
+    const elConveyorThroughput = document.getElementById("conveyor-throughput");
+    const elVel = document.getElementById("velocity");
+    const elRobotResponse = document.getElementById("robot-response");
+    const elStationTakt = document.getElementById("station-takt");
+    const elParallel = document.getElementById("chk-parallel-processing");
+
+    const groupConveyor = document.getElementById("group-conveyor-timing");
+    const groupThroughputField = document.getElementById("group-throughput-field");
+    const groupVelocityField = document.getElementById("group-velocity-field");
+    const groupRobot = document.getElementById("group-robot-timing");
+    const groupStation = document.getElementById("group-station-timing");
+
+    const elFovX = document.getElementById("fov-x");
+    const elFovY = document.getElementById("fov-y");
+    const elWD = document.getElementById("working-distance");
+    const elDMin = document.getElementById("min-defect");
+    const elChkZ = document.getElementById("chk-z-height");
+    const elChkPose = document.getElementById("chk-6dof-pose");
+    const elSurface = document.getElementById("surface-type");
+    const elIp = document.getElementById("ip-rating");
+
+    // Summary Elements (1 Parameter per Line)
+    const elSumProdMode = document.getElementById("sum-prod-mode");
+    const elRowSumThroughput = document.getElementById("row-sum-throughput");
+    const elSumThroughput = document.getElementById("sum-throughput");
+    const elRowSumSpeed = document.getElementById("row-sum-speed");
+    const elSumSpeed = document.getElementById("sum-speed");
+    const elSumParallel = document.getElementById("sum-parallel");
+    const elSumIp = document.getElementById("sum-ip");
+    const elSumFov = document.getElementById("sum-fov");
+    const elSumWd = document.getElementById("sum-wd");
+    const elSumDmin = document.getElementById("sum-dmin");
+    const elSumPose = document.getElementById("sum-pose");
+    const elSumDepth = document.getElementById("sum-depth");
+    const elSumSurface = document.getElementById("sum-surface");
+    const elSumSpectrum = document.getElementById("sum-spectrum");
+
+    // Populate initial state
+    if (state.requirements.spectralBand) elSpectrum.value = state.requirements.spectralBand;
+    if (state.requirements.timingMode) elTimingMode.value = state.requirements.timingMode;
+    if (state.requirements.conveyorThroughputPerMin) {
+      elConveyorThroughput.value = state.requirements.conveyorThroughputPerMin;
+    } else if (state.requirements.conveyorThroughput) {
+      const storedRate = state.requirements.conveyorThroughput;
+      elConveyorThroughput.value = storedRate <= 60 ? Math.round(storedRate * 60) : storedRate;
+    }
+    elVel.value = state.requirements.velocityMps ?? 0.8;
+    elFovX.value = state.requirements.fovXMm ?? 400;
+    elFovY.value = state.requirements.fovYMm ?? 300;
+    elWD.value = state.requirements.workingDistanceMm ?? 600;
+    elDMin.value = state.requirements.minDefectMm ?? 0.2;
+    elChkZ.checked = state.requirements.needsZHeight ?? false;
+    elChkPose.checked = state.requirements.needs6DoFPose ?? false;
+    elSurface.value = state.requirements.surfaceType ?? "matte";
+    elIp.value = state.requirements.ipRatingNeeded ?? "IP65";
+    elParallel.checked = state.requirements.parallelProcessing ?? true;
+
+    function handleTimingModeChange() {
+      const mode = elTimingMode.value;
+      if (mode === "conveyor_throughput") {
+        groupConveyor.style.display = "grid";
+        groupThroughputField.style.display = "block";
+        groupVelocityField.style.display = "block";
+        groupRobot.style.display = "none";
+        groupStation.style.display = "none";
+      } else if (mode === "endless_web") {
+        groupConveyor.style.display = "grid";
+        groupThroughputField.style.display = "none";
+        groupVelocityField.style.display = "block";
+        groupRobot.style.display = "none";
+        groupStation.style.display = "none";
+      } else if (mode === "robot_response") {
+        groupConveyor.style.display = "none";
+        groupRobot.style.display = "grid";
+        groupStation.style.display = "none";
+      } else {
+        groupConveyor.style.display = "none";
+        groupRobot.style.display = "none";
+        groupStation.style.display = "grid";
+      }
+    }
+
+    function saveRequirementsAndRefreshSummary() {
+      const spec = elSpectrum.value;
+      const timingMode = elTimingMode.value;
+
+      let vel = 0;
+      if (timingMode === "conveyor_throughput" || timingMode === "endless_web") {
+        vel = parseFloat(elVel.value) || 0;
+      }
+
+      const fovX = parseFloat(elFovX.value) || 400;
+      const fovY = parseFloat(elFovY.value) || 300;
+      const wd = parseFloat(elWD.value) || 600;
+      const dMin = parseFloat(elDMin.value) || 0.2;
+      const isZ = elChkZ.checked;
+      const isPose = elChkPose.checked;
+      const is3D = isZ || isPose;
+      const parallel = elParallel.checked;
+
+      const derivedScan = OpticsEngine.deriveScanGeometry(timingMode, vel, fovX, dMin, is3D);
+      const effectiveGeom = derivedScan.geometry;
+
+      const res = OpticsEngine.calculateResolution(effectiveGeom, fovX, fovY, dMin, vel, 3.0);
+      const exp = OpticsEngine.calculateExposureTime(dMin, vel);
+      const fl = OpticsEngine.calculateFocalLength(wd, fovX, 8.8);
+
+      const partsPerMin = (timingMode === "endless_web")
+        ? Math.round((vel * 1000 / Math.max(100, fovX)) * 60)
+        : (parseFloat(elConveyorThroughput.value) || 240);
+      const partsPerSec = partsPerMin / 60.0;
+
+      const timingParams = {
+        timingMode: (timingMode === "endless_web") ? "conveyor_throughput" : timingMode,
+        throughputPartsPerSec: partsPerSec,
+        robotResponseTimeMs: parseFloat(elRobotResponse.value) || 300,
+        stationTaktTimeMs: parseFloat(elStationTakt.value) || 500,
+        parallelProcessing: parallel,
+        exposureTimeMs: exp.maxExposureMs,
+        cameraInterface: "GigE Vision",
+        imageSizeMb: res.isLineScan ? 4.0 : res.minTotalMP * 3
+      };
+      const budget = LatencyEngine.calculateBudget(timingParams);
+
+      // Update Simple Line-by-Line Summary (1 Parameter per Line, no calculations!)
+      const modeLabels = {
+        conveyor_throughput: "Singulated Parts on Conveyor",
+        endless_web: "Endless Web / Continuous Stream",
+        robot_response: "Robotic Cell / Pick-and-Place",
+        discrete_takt: "Discrete Indexed Station"
+      };
+      elSumProdMode.textContent = modeLabels[timingMode] || timingMode;
+
+      if (timingMode === "conveyor_throughput") {
+        elRowSumThroughput.style.display = "block";
+        elSumThroughput.textContent = `${partsPerMin} parts/min`;
+        elRowSumSpeed.style.display = "block";
+        elSumSpeed.textContent = `${vel} m/s`;
+      } else if (timingMode === "endless_web") {
+        elRowSumThroughput.style.display = "none";
+        elRowSumSpeed.style.display = "block";
+        elSumSpeed.textContent = `${vel} m/s`;
+      } else if (timingMode === "robot_response") {
+        elRowSumThroughput.style.display = "block";
+        elSumThroughput.textContent = `${elRobotResponse.value} ms response window`;
+        elRowSumSpeed.style.display = "block";
+        elSumSpeed.textContent = "0 m/s (Stationary)";
+      } else {
+        elRowSumThroughput.style.display = "block";
+        elSumThroughput.textContent = `${elStationTakt.value} ms takt time`;
+        elRowSumSpeed.style.display = "block";
+        elSumSpeed.textContent = "0 m/s (Stationary)";
+      }
+
+      elSumParallel.textContent = parallel ? "Yes" : "No";
+      elSumIp.textContent = elIp.value;
+      elSumFov.textContent = `${fovX} × ${fovY} mm`;
+      elSumWd.textContent = `${wd} mm`;
+      elSumDmin.textContent = `${dMin} mm`;
+      elSumPose.textContent = isPose ? "Yes" : "No";
+      elSumDepth.textContent = isZ ? "Yes" : "No";
+
+      const surfLabels = {
+        matte: "Matte / Diffuse",
+        specular_metal: "Shiny / Specular Metal",
+        transparent_glass: "Transparent / Glass",
+        dark_absorbent: "Absorbent / Dark"
+      };
+      const specLabels = {
+        visible: "Visible (400–700 nm)",
+        nir: "Near-Infrared NIR (750–1050 nm)",
+        swir: "Short-Wave Infrared SWIR (1000–1700 nm)"
+      };
+      elSumSurface.textContent = surfLabels[elSurface.value] || elSurface.value;
+      elSumSpectrum.textContent = specLabels[spec] || spec;
+
+      // Save state for Step 3 and Step 4
+      state.requirements = {
+        sensorGeometry: effectiveGeom,
+        sensorGeometryMode: "auto",
+        spectralBand: spec,
+        timingMode: timingMode,
+        conveyorThroughput: partsPerSec,
+        conveyorThroughputPerMin: partsPerMin,
+        velocityMps: vel,
+        robotResponseTimeMs: parseFloat(elRobotResponse.value) || 300,
+        stationTaktTimeMs: parseFloat(elStationTakt.value) || 500,
+        parallelProcessing: parallel,
+        taktTimeMs: budget.targetTimeMs,
+        fovXMm: fovX,
+        fovYMm: fovY,
+        workingDistanceMm: wd,
+        minDefectMm: dMin,
+        needsZHeight: isZ,
+        needs6DoFPose: isPose,
+        needs3D: is3D,
+        surfaceType: elSurface.value,
+        ipRatingNeeded: elIp.value
+      };
+
+      state.opticsCalculations = {
+        minWidthPx: res.minWidthPx,
+        minHeightPx: res.minHeightPx,
+        minTotalMP: res.minTotalMP,
+        isLineScan: res.isLineScan,
+        requiredLineRateKhz: res.requiredLineRateKhz,
+        maxExposureUs: exp.maxExposureUs,
+        maxExposureMs: exp.maxExposureMs,
+        shutterRequired: exp.shutterRequired,
+        strobeRequired: exp.strobeRequired,
+        exactFocalLengthMm: fl.exactFocalLengthMm,
+        standardLensMm: fl.standardLensMm,
+        maxInferenceBudgetMs: budget.maxInferenceBudgetMs
+      };
+
+      AppState.save(state);
+    }
+
+    const btnUpdateReq = document.getElementById("btn-update-req");
+    const btnUpdateReqRight = document.getElementById("btn-update-req-right");
+    const lblUpdateStatus = document.getElementById("lbl-update-status");
+
+    function triggerManualUpdate() {
+      handleTimingModeChange();
+      saveRequirementsAndRefreshSummary();
+      if (lblUpdateStatus) {
+        lblUpdateStatus.style.display = "inline";
+        setTimeout(() => { lblUpdateStatus.style.display = "none"; }, 2000);
+      }
+    }
+
+    if (btnUpdateReq) btnUpdateReq.addEventListener("click", triggerManualUpdate);
+    if (btnUpdateReqRight) btnUpdateReqRight.addEventListener("click", triggerManualUpdate);
+
+    [
+      elSpectrum, elTimingMode, elConveyorThroughput, elVel,
+      elRobotResponse, elStationTakt, elParallel, elFovX, elFovY, elWD,
+      elDMin, elChkZ, elChkPose, elSurface, elIp
+    ].forEach(el => {
+      if (el) {
+        el.addEventListener("input", () => {
+          handleTimingModeChange();
+          saveRequirementsAndRefreshSummary();
+        });
+        el.addEventListener("change", () => {
+          handleTimingModeChange();
+          saveRequirementsAndRefreshSummary();
+        });
+      }
+    });
+
+    handleTimingModeChange();
+    saveRequirementsAndRefreshSummary();
+  </script>
+</body>
+</html>

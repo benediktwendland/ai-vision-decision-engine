@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Decision Engine for Industrial AI-Based Vision</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="brand-container">
+      <div>
+        <h1 class="brand-title">Decision Engine for Industrial AI-Based Vision</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="calculator_economic.html" class="btn btn-secondary">Economic Calculator</a>
+      <a href="rules_step2.html" target="_blank" class="btn btn-secondary">Decision Rules &amp; Equations &nearr;</a>
+      <a href="step1_use_case.html" class="btn btn-primary">Start New Analysis &rarr;</a>
+    </div>
+  </header>
+
+  <!-- Step Wizard Bar -->
+  <nav class="wizard-nav">
+    <div class="step-item active"><span class="step-num">0</span> Overview</div>
+    <span class="step-divider">&gt;</span>
+    <a href="step1_use_case.html" class="step-item"><span class="step-num">1</span> Use Case &amp; NPV</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step2_requirements.html" class="step-item"><span class="step-num">2</span> Requirement Definition</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step3_hardware_optics.html" class="step-item"><span class="step-num">3</span> Optics & Sensors</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step4_software_ai.html" class="step-item"><span class="step-num">4</span> AI and Software</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step5_integration.html" class="step-item"><span class="step-num">5</span> Integration</a>
+    <span class="step-divider">&gt;</span>
+    <a href="results.html" class="step-item"><span class="step-num">★</span> Results</a>
+  </nav>
+
+  <!-- Main Hero & Presets Section -->
+  <main class="main-wrapper">
+    <section class="card" style="padding: 1.75rem 2rem; border-top: 3px solid #0f172a;">
+
+
+      <!-- Quick Action Buttons -->
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <a href="step1_use_case.html" class="btn btn-primary">
+          Run Step-by-Step Wizard &rarr;
+        </a>
+        <button id="btn-load-case-1" class="btn btn-secondary">
+          Case 1: Inline Sheet Metal (Area 20MP)
+        </button>
+        <button id="btn-load-case-2" class="btn btn-secondary">
+          Case 2: Robotic 3D Bin-Picking (6-DoF)
+        </button>
+        <button id="btn-load-case-3" class="btn btn-secondary">
+          Case 3: Sorting (Line Scan &amp; NIR)
+        </button>
+        <button id="btn-reset" class="btn btn-secondary">
+          Reset
+        </button>
+      </div>
+    </section>
+
+    <!-- CSV Database Import Section (European / German Excel Semicolon Format) -->
+    <section class="card" style="margin-top: 1.25rem; padding: 1.35rem 1.75rem; border-top: 3px solid #0f9489;">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.5rem;">
+        <div>
+          <h3 style="font-size: 1.1rem; font-weight: 700; margin: 0; color: #0f172a;">
+            📂 Product &amp; Model Database (Excel .csv Import — Semicolon Format)
+          </h3>
+          <p style="font-size: 0.85rem; color: #475569; margin: 0.2rem 0 0 0;">
+            Edit the German/European semicolon-separated <code>.csv</code> files in folder <code>selection-tool/data/</code> directly with Microsoft Excel, then load them here via the <strong>Open</strong> buttons.
+          </p>
+        </div>
+        <button id="btn-reset-csv" type="button" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;">
+          ↺ Restore Built-in Default Databases
+        </button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.85rem; margin-top: 0.85rem;">
+        
+        <!-- 1. Cameras CSV -->
+        <div class="stat-box" style="margin-bottom: 0; background: #f8fafc; border: 1px solid #cbd5e1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 0.9rem; color: #0f172a;">1. Cameras (<code>cameras.csv</code>)</strong>
+            <span id="badge-count-cameras" class="unit-badge" style="background: #f0fdfa; color: #0d746c; border: 1px solid #5eead4;">11 Products</span>
+          </div>
+          <div style="font-size: 0.78rem; color: #64748b; margin: 0.25rem 0 0.6rem 0;">
+            2D Area, Line Scan, NIR &amp; 3D Sensors
+          </div>
+          <input type="file" id="file-csv-cameras" accept=".csv" style="display: none;">
+          <button type="button" onclick="document.getElementById('file-csv-cameras').click()" class="btn btn-secondary" style="width: 100%; font-size: 0.82rem; padding: 0.4rem;">
+            📂 Open cameras.csv ...
+          </button>
+        </div>
+
+        <!-- 2. Lenses CSV -->
+        <div class="stat-box" style="margin-bottom: 0; background: #f8fafc; border: 1px solid #cbd5e1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 0.9rem; color: #0f172a;">2. Lenses (<code>lenses.csv</code>)</strong>
+            <span id="badge-count-lenses" class="unit-badge" style="background: #eff6ff; color: #0284c7; border: 1px solid #bae6fd;">6 Products</span>
+          </div>
+          <div style="font-size: 0.78rem; color: #64748b; margin: 0.25rem 0 0.6rem 0;">
+            C-Mount / F-Mount Lenses (8–50 mm)
+          </div>
+          <input type="file" id="file-csv-lenses" accept=".csv" style="display: none;">
+          <button type="button" onclick="document.getElementById('file-csv-lenses').click()" class="btn btn-secondary" style="width: 100%; font-size: 0.82rem; padding: 0.4rem;">
+            📂 Open lenses.csv ...
+          </button>
+        </div>
+
+        <!-- 3. AI Models CSV -->
+        <div class="stat-box" style="margin-bottom: 0; background: #f8fafc; border: 1px solid #cbd5e1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 0.9rem; color: #0f172a;">3. AI Models (<code>ai_models.csv</code>)</strong>
+            <span id="badge-count-models" class="unit-badge" style="background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe;">5 Models</span>
+          </div>
+          <div style="font-size: 0.78rem; color: #64748b; margin: 0.25rem 0 0.6rem 0;">
+            Classical CV, YOLOv8, Segmentation, 6-DoF
+          </div>
+          <input type="file" id="file-csv-models" accept=".csv" style="display: none;">
+          <button type="button" onclick="document.getElementById('file-csv-models').click()" class="btn btn-secondary" style="width: 100%; font-size: 0.82rem; padding: 0.4rem;">
+            📂 Open ai_models.csv ...
+          </button>
+        </div>
+
+        <!-- 4. Edge Compute CSV -->
+        <div class="stat-box" style="margin-bottom: 0; background: #f8fafc; border: 1px solid #cbd5e1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="font-size: 0.9rem; color: #0f172a;">4. Edge Compute (<code>edge_hardware.csv</code>)</strong>
+            <span id="badge-count-hardware" class="unit-badge" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a;">5 Systems</span>
+          </div>
+          <div style="font-size: 0.78rem; color: #64748b; margin: 0.25rem 0 0.6rem 0;">
+            Industrial PC, Jetson Orin, Hailo-8, SmartCam
+          </div>
+          <input type="file" id="file-csv-hardware" accept=".csv" style="display: none;">
+          <button type="button" onclick="document.getElementById('file-csv-hardware').click()" class="btn btn-secondary" style="width: 100%; font-size: 0.82rem; padding: 0.4rem;">
+            📂 Open edge_hardware.csv ...
+          </button>
+        </div>
+
+      </div>
+
+      <div id="csv-import-status" style="display: none; margin-top: 0.75rem; padding: 0.5rem 0.85rem; background: #dcfce7; color: #15803d; border: 1px solid #86efac; border-radius: 6px; font-size: 0.85rem; font-weight: 600;">
+        ✓ CSV file loaded successfully!
+      </div>
+    </section>
+
+    <!-- Methodology Overview (Werheid et al. 2026 alignment) -->
+    <div style="margin-top: 1.5rem;">
+      <h3 style="font-size: 1.05rem; font-weight: 600; margin-bottom: 0.75rem; color: #0f172a;">
+        The 5-Step Selection Framework (Adapted from Werheid et al., WZL RWTH Aachen 2026)
+      </h3>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem;">
+        
+        <div class="card" style="margin-bottom: 0; padding: 1rem 1.25rem;">
+          <div style="color: #64748b; font-weight: 600; font-size: 0.75rem; margin-bottom: 0.25rem;">STEP 1</div>
+          <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem;">Use Case &amp; Net Present Value (NPV)</h4>
+          <p style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">
+            Project scope definition, multi-stakeholder governance (Works Council, QA, IT/OT), and dynamic capital budgeting (NPV &amp; hurdle rate).
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 0; padding: 1rem 1.25rem;">
+          <div style="color: #64748b; font-weight: 600; font-size: 0.75rem; margin-bottom: 0.25rem;">STEP 2</div>
+          <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem;">Requirement Definition</h4>
+          <p style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">
+            Input of production speed, Field of View (FoV), working distance, smallest defect size, 2D/3D spatial needs, and material properties.
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 0; padding: 1rem 1.25rem;">
+          <div style="color: #64748b; font-weight: 600; font-size: 0.75rem; margin-bottom: 0.25rem;">STEP 3</div>
+          <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem;">Optics &amp; Sensors</h4>
+          <p style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">
+            Analytical calculation of Nyquist resolution, exposure limits, and focal length, followed by matching 2D/3D camera, lens, and lighting selection.
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 0; padding: 1rem 1.25rem;">
+          <div style="color: #64748b; font-weight: 600; font-size: 0.75rem; margin-bottom: 0.25rem;">STEP 4</div>
+          <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem;">AI &amp; Computing Architecture</h4>
+          <p style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">
+            Dual-dimension co-design: AI model selection (Classical CV, YOLO, PatchCore, FoundationPose) and compute hardware sizing (TOPS vs. VRAM).
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 0; padding: 1rem 1.25rem;">
+          <div style="color: #64748b; font-weight: 600; font-size: 0.75rem; margin-bottom: 0.25rem;">STEP 5</div>
+          <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem;">Integration &amp; Deployment</h4>
+          <p style="font-size: 0.8rem; color: #64748b; line-height: 1.4;">
+            4-Pillar deployment verification: OT Data Bus, Optical Calibration, Quality Assurance &amp; drift monitoring, and Operator Guidelines.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Academic Research Prototype &copy; 2026 | Decision Engine for Industrial AI-Based Vision</p>
+    <p style="font-size: 0.78rem; color: #64748b; margin-top: 0.35rem; max-width: 800px; margin-left: auto; margin-right: auto; line-height: 1.4;">
+      <strong>Academic Disclaimer / Haftungsausschluss:</strong> This tool is an open-source research prototype designed for educational and engineering decision support. 
+      Calculations and component mappings do not claim completeness or correctness. Any liability or warranty is excluded. 
+      Plant safety (ISO 13849/CE) and physical commissioning must be validated by certified engineers.
+    </p>
+  </footer>
+
+  <script src="js/data/cameras.js"></script>
+  <script src="js/data/models.js"></script>
+  <script src="js/data/hardware.js"></script>
+  <script src="js/engine/optics.js"></script>
+  <script src="js/engine/latency.js"></script>
+  <script src="js/engine/mcdm.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    document.getElementById("btn-load-case-1").addEventListener("click", () => {
+      AppState.loadPresetCase1();
+      window.location.href = "step1_use_case.html";
+    });
+
+    document.getElementById("btn-load-case-2").addEventListener("click", () => {
+      AppState.loadPresetCase2();
+      window.location.href = "step1_use_case.html";
+    });
+
+    document.getElementById("btn-load-case-3").addEventListener("click", () => {
+      AppState.loadPresetCase3();
+      window.location.href = "step1_use_case.html";
+    });
+
+    document.getElementById("btn-reset").addEventListener("click", () => {
+      if (confirm("Reset configuration to default values?")) {
+        AppState.reset();
+        location.reload();
+      }
+    });
+
+    // CSV Database Import Handlers on Start Page
+    const elStatus = document.getElementById("csv-import-status");
+    function showCsvStatus(msg) {
+      elStatus.textContent = msg;
+      elStatus.style.display = "block";
+      updateCatalogBadges();
+    }
+
+    function updateCatalogBadges() {
+      const camCount = (typeof CAMERA_CATALOG !== "undefined") ? CAMERA_CATALOG.length : 11;
+      const isCustomCam = !!localStorage.getItem(CSVDatabase.KEYS.CAMERAS);
+      document.getElementById("badge-count-cameras").textContent = `${camCount} Products${isCustomCam ? ' (CSV Loaded)' : ''}`;
+
+      const savedLenses = localStorage.getItem(CSVDatabase.KEYS.LENSES);
+      const lensCount = savedLenses ? JSON.parse(savedLenses).length : 6;
+      document.getElementById("badge-count-lenses").textContent = `${lensCount} Products${savedLenses ? ' (CSV Loaded)' : ''}`;
+
+      const modelCount = (typeof MODEL_CATALOG !== "undefined") ? MODEL_CATALOG.length : 5;
+      const isCustomMod = !!localStorage.getItem(CSVDatabase.KEYS.MODELS);
+      document.getElementById("badge-count-models").textContent = `${modelCount} Models${isCustomMod ? ' (CSV Loaded)' : ''}`;
+
+      const hwCount = (typeof HARDWARE_CATALOG !== "undefined") ? HARDWARE_CATALOG.length : 5;
+      const isCustomHw = !!localStorage.getItem(CSVDatabase.KEYS.HARDWARE);
+      document.getElementById("badge-count-hardware").textContent = `${hwCount} Systems${isCustomHw ? ' (CSV Loaded)' : ''}`;
+    }
+
+    function bindCsvFileInput(inputId, importFn, label) {
+      const inputEl = document.getElementById(inputId);
+      if (!inputEl) return;
+      inputEl.addEventListener("change", (evt) => {
+        const file = evt.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const items = importFn.call(CSVDatabase, e.target.result);
+          showCsvStatus(`✓ Loaded ${items.length} entries from "${file.name}" (${label}) into browser session!`);
+        };
+        reader.readAsText(file, "UTF-8");
+      });
+    }
+
+    bindCsvFileInput("file-csv-cameras", CSVDatabase.importCamerasCSV, "Cameras");
+    bindCsvFileInput("file-csv-lenses", CSVDatabase.importLensesCSV, "Lenses");
+    bindCsvFileInput("file-csv-models", CSVDatabase.importModelsCSV, "AI Models");
+    bindCsvFileInput("file-csv-hardware", CSVDatabase.importHardwareCSV, "Edge Hardware");
+
+    document.getElementById("btn-reset-csv").addEventListener("click", () => {
+      CSVDatabase.resetAllCustomCSV();
+      location.reload();
+    });
+
+    updateCatalogBadges();
+  </script>
+</body>
+</html>

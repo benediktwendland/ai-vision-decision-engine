@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Step 4: AI and Computing Hardware | AI Vision Selection Tool</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="top-header">
+    <div class="brand-container">
+      <span class="brand-badge">STEP 4</span>
+      <div>
+        <h1 class="brand-title">Step 4: AI Models &amp; Computing Hardware Architecture</h1>
+        <p class="brand-subtitle">Step 4a: Algorithmic fit &amp; model selection &nbsp;|&nbsp; Step 4b: Compute hardware sizing (VRAM vs. TOPS)</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <a href="step3_hardware_optics.html" class="btn btn-secondary">&larr; Step 3 (Optics)</a>
+      <a href="step5_integration.html" class="btn btn-primary" id="btn-next-top">Next: Step 5 (Integration) &rarr;</a>
+    </div>
+  </header>
+
+  <!-- Step Wizard Bar -->
+  <nav class="wizard-nav">
+    <a href="index.html" class="step-item"><span class="step-num">0</span> Overview</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step1_use_case.html" class="step-item completed"><span class="step-num">1</span> Use Case &amp; NPV</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step2_requirements.html" class="step-item completed"><span class="step-num">2</span> Requirements</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step3_hardware_optics.html" class="step-item completed"><span class="step-num">3</span> Optics &amp; Sensors</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step4_software_ai.html" class="step-item active"><span class="step-num">4</span> AI &amp; Computing Hardware</a>
+    <span class="step-divider">&gt;</span>
+    <a href="step5_integration.html" class="step-item"><span class="step-num">5</span> Integration</a>
+    <span class="step-divider">&gt;</span>
+    <a href="results.html" class="step-item"><span class="step-num">6</span> Summary</a>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Step 4 Top Sizing Equation Banner (Linking Step 2 & 3 to Step 4) -->
+    <section class="card" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%); border-left: 5px solid #0f9489;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+        <div>
+          <span class="unit-badge" style="background:#ccfbf1; color:#0d746c; font-weight:700; margin-bottom: 0.4rem; display:inline-block;">Sizing Dimensions</span>
+          <h2 class="card-title" style="margin-bottom: 0;">4.0 Real-Time Budget &amp; Dual Hardware Sizing Rule (TOPS &amp; VRAM)</h2>
+          <p class="card-subtitle" style="margin-top: 0.2rem;">Deterministic derivation of max. inference time, required compute (TOPS), and minimum GPU memory (VRAM).</p>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 0.85rem; color: #475569; font-weight: 600;">Net AI Budget:</span>
+          <div style="font-size: 1.8rem; font-weight: 800; color: #0d746c;" id="val-net-budget">192.0 ms</div>
+          <span style="font-size: 0.75rem; color: #64748b;" id="val-parallel-status">Parallel ring-buffer active</span>
+        </div>
+      </div>
+
+      <!-- 3 Sizing Parameter Cards (Equations) -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1rem;">
+        <!-- Card 1: Cycle & Latency Waterfall -->
+        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.85rem;">
+          <div style="font-size: 0.82rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+            <span>1. Real-Time Latency Budget</span>
+            <span class="formula-callout" style="padding: 0.15rem 0.4rem; font-size: 0.72rem;" id="callout-waterfall">t_AI,max = T_cycle − t_cam − t_PLC</span>
+          </div>
+          <div style="margin-top: 0.5rem; font-size: 0.82rem; color: #334155; line-height: 1.45;">
+            <div>• Target Cycle Time (T_cycle): <strong id="val-takt-time">200 ms</strong> <span style="font-size: 0.75rem; color: #64748b;" id="val-timing-mode-sub">(300 parts/min)</span></div>
+            <div>• Optical &amp; PLC Overhead: <strong id="val-overhead-time">8.0 ms</strong> <span style="font-size: 0.75rem; color: #64748b;" id="val-cam-interface">(GigE Vision)</span></div>
+            <div style="color: #0d746c; font-weight: 700;">&rarr; Max. Allowed Inferenz: <span id="val-budget-limit">192.0</span> ms (Cut-Off limit)</div>
+          </div>
+        </div>
+
+        <!-- Card 2: Compute Throughput (TOPS) -->
+        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.85rem;">
+          <div style="font-size: 0.82rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+            <span>2. Processing Power (TOPS)</span>
+            <span class="formula-callout" style="padding: 0.15rem 0.4rem; font-size: 0.72rem;">P_compute ≥ FLOPs / (t_AI,max · η)</span>
+          </div>
+          <div style="margin-top: 0.5rem; font-size: 0.82rem; color: #334155; line-height: 1.45;">
+            <div>• Required Edge Compute: <strong id="val-req-compute">0.15 TOPS</strong></div>
+            <div>• Active Acceleration Lever: <strong id="val-quant-rule">INT8 active (~2.4× speedup)</strong></div>
+            <div style="color: #0284c7; font-weight: 700;">&rarr; Determines whether Taktzeit is fulfilled!</div>
+          </div>
+        </div>
+
+        <!-- Card 3: Memory Capacity (VRAM) -->
+        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.85rem;">
+          <div style="font-size: 0.82rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+            <span>3. Memory Capacity (VRAM)</span>
+            <span class="formula-callout" style="padding: 0.15rem 0.4rem; font-size: 0.72rem;">VRAM_min ≥ (Params · Bytes) · 1.3</span>
+          </div>
+          <div style="margin-top: 0.5rem; font-size: 0.82rem; color: #334155; line-height: 1.45;">
+            <div>• Selected Model VRAM Need: <strong id="val-req-vram">0.8 GB</strong></div>
+            <div>• Active Target Class: <strong id="val-task-family">2D Detection / Segmentation</strong></div>
+            <div style="color: #7c3aed; font-weight: 700;">&rarr; Prevents CUDA Out-Of-Memory crashes!</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-Column Layout: Left (Step 4a & 4b Lists) / Right (Summary & Benchmark) -->
+    <div class="content-grid">
+
+      <!-- LEFT COLUMN -->
+      <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+
+        <!-- STEP 4a: AI Model Paradigm Selection -->
+        <section class="card" style="border-top: 4px solid #0f9489;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <span class="unit-badge" style="background:#ccfbf1; color:#0d746c; font-weight:700;">STEP 4a</span>
+              <h2 class="card-title" style="display: inline-block; margin-left: 0.4rem; margin-bottom: 0;">AI Model Paradigms (Algorithmic Fit)</h2>
+              <p class="card-subtitle" style="margin-top: 0.2rem;">Select the vision topology matching your defect type, training data availability, and 2D/3D task.</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <label for="precision-select" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Precision:</label>
+              <select id="precision-select" class="form-input" style="width: auto; padding: 0.25rem 0.5rem; font-size: 0.82rem;">
+                <option value="INT8" selected>INT8 (Edge Quantized, 2.4×)</option>
+                <option value="FP16">FP16 (Half Precision, 1.6×)</option>
+                <option value="FP32">FP32 (Single Baseline, 1.0×)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Model List Cards -->
+          <div id="model-list-container" style="display: flex; flex-direction: column; gap: 0.85rem; margin-top: 1rem;">
+            <!-- Dynamically populated from MODEL_CATALOG / ai_models.csv -->
+          </div>
+        </section>
+
+        <!-- STEP 4b: Computing Hardware Architecture Sizing -->
+        <section class="card" style="border-top: 4px solid #6366f1;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <span class="unit-badge" style="background:#ede9fe; color:#4338ca; font-weight:700;">STEP 4b</span>
+              <h2 class="card-title" style="display: inline-block; margin-left: 0.4rem; margin-bottom: 0;">Computing Hardware Architecture (VRAM vs. TOPS)</h2>
+              <p class="card-subtitle" style="margin-top: 0.2rem;">Select the industrial edge compute tier to fulfill latency budget (t_AI) and GPU memory (VRAM).</p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <label for="runtime-select" style="font-size: 0.8rem; font-weight: 600; color: #475569;">Runtime:</label>
+              <select id="runtime-select" class="form-input" style="width: auto; padding: 0.25rem 0.5rem; font-size: 0.82rem;">
+                <option value="TensorRT" selected>NVIDIA TensorRT</option>
+                <option value="OpenVINO">Intel OpenVINO</option>
+                <option value="ONNX">ONNX Runtime</option>
+                <option value="vLLM">vLLM / TensorRT-LLM (VLM)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Hardware List Cards -->
+          <div id="hardware-list-container" style="display: flex; flex-direction: column; gap: 0.85rem; margin-top: 1rem;">
+            <!-- Dynamically populated from HARDWARE_CATALOG / edge_hardware.csv -->
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: Real-Time Verification Summary & Boundary Checks -->
+      <aside class="sidebar-column">
+
+        <!-- Active Setup Summary Card -->
+        <div class="card" style="position: sticky; top: 1rem; border: 1px solid #cbd5e1;">
+          <div class="card-header" style="padding-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0;">
+            <h3 class="card-title" style="font-size: 1.05rem;">Step 4 Configuration Summary</h3>
+          </div>
+
+          <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.65rem; font-size: 0.85rem;">
+            
+            <!-- Selected AI Model -->
+            <div style="padding: 0.6rem; background: #f0fdfa; border-radius: 6px; border: 1px solid #99f6e4;">
+              <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: #0d746c;">4a Selected AI Model</span>
+              <div style="font-weight: 700; color: #0f172a; font-size: 0.95rem; margin-top: 0.2rem;" id="val-summary-model">YOLOv8 Nano (YOLOv8n)</div>
+              <div style="font-size: 0.78rem; color: #0d746c;" id="val-summary-model-params">3.2M Params | 8.7 GFLOPs | Min. VRAM: 0.8 GB</div>
+              <div style="font-size: 0.75rem; color: #475569; margin-top: 0.3rem;" id="val-summary-training">Training: 150-500 images</div>
+            </div>
+
+            <!-- Selected Hardware Platform -->
+            <div style="padding: 0.6rem; background: #ede9fe; border-radius: 6px; border: 1px solid #ddd6fe;">
+              <span style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: #4338ca;">4b Selected Hardware Tier</span>
+              <div style="font-weight: 700; color: #0f172a; font-size: 0.95rem; margin-top: 0.2rem;" id="val-summary-hw">NVIDIA Jetson Orin Nano</div>
+              <div style="font-size: 0.78rem; color: #4338ca;" id="val-summary-hw-params">40 TOPS | 8.0 GB Unified VRAM | 15 W TDP</div>
+              <div style="font-size: 0.75rem; color: #475569; margin-top: 0.3rem;" id="val-summary-hw-cooling">Form Factor: DIN-Rail Mount | Fanless Heatsink</div>
+            </div>
+
+            <!-- Inferenz & VRAM Status Matrix -->
+            <div style="padding: 0.75rem; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <span style="color: #475569;">Est. AI Inferenz:</span>
+                <span style="font-weight: 800; font-size: 1.15rem; color: #0f172a;" id="val-summary-latency">2.8 ms</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.3rem;">
+                <span style="color: #475569;">Throughput (FPS):</span>
+                <span style="font-weight: 700; color: #0284c7;" id="val-summary-fps">357.1 FPS</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.3rem;">
+                <span style="color: #475569;">Timing Margin:</span>
+                <span style="font-weight: 700; color: #15803d;" id="val-summary-margin">+189.2 ms (Budget: 192.0 ms)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 0.3rem;">
+                <span style="color: #475569;">VRAM Capacity:</span>
+                <span style="font-weight: 700; color: #7c3aed;" id="val-summary-vram-margin">Sufficient (8.0 GB &ge; 0.8 GB)</span>
+              </div>
+            </div>
+
+            <!-- Overrun Alerts -->
+            <div id="alert-latency-overrun" style="display: none; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 0.6rem; color: #991b1b; font-size: 0.8rem; line-height: 1.35;">
+              <strong>&Delta; Latency Overrun!</strong> Selected AI model takes longer than the real-time budget allows. Enable INT8 quantization or upgrade hardware tier.
+            </div>
+
+            <div id="alert-vram-overrun" style="display: none; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 6px; padding: 0.6rem; color: #9f1239; font-size: 0.8rem; line-height: 1.35;">
+              <strong>&Delta; CUDA Out-Of-Memory Risk!</strong> Selected model requires more VRAM than this hardware platform provides. Please choose a higher Tier.
+            </div>
+
+            <!-- OT Architecture Boundary Note -->
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.6rem; font-size: 0.76rem; color: #64748b; line-height: 1.4;">
+              <strong>Industrial Architecture Rule:</strong> Public Cloud is strictly excluded from inline closed-loop inspection due to network latency jitter, bandwidth (>3 Gbps/cam), and lack of 99.99% plant autonomy.
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+              <a href="step5_integration.html" class="btn btn-primary" style="flex: 1; text-align: center;">Proceed to Step 5 (Integration) &rarr;</a>
+            </div>
+
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Script Includes -->
+  <script src="js/data/cameras.js"></script>
+  <script src="js/data/models.js"></script>
+  <script src="js/data/hardware.js"></script>
+  <script src="js/engine/optics.js"></script>
+  <script src="js/engine/latency.js"></script>
+  <script src="js/engine/mcdm.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    const state = AppState.load();
+    const req = state.requirements;
+    const calc = state.opticsCalculations;
+
+    // Top Parameter Elements
+    const elWaterfallCallout = document.getElementById("callout-waterfall");
+    const elValTakt = document.getElementById("val-takt-time");
+    const elValTimingSub = document.getElementById("val-timing-mode-sub");
+    const elValOverhead = document.getElementById("val-overhead-time");
+    const elValCamInterface = document.getElementById("val-cam-interface");
+    const elValNetBudget = document.getElementById("val-net-budget");
+    const elValBudgetLimit = document.getElementById("val-budget-limit");
+    const elValParallelStatus = document.getElementById("val-parallel-status");
+    const elValReqCompute = document.getElementById("val-req-compute");
+    const elValReqVram = document.getElementById("val-req-vram");
+    const elValTaskFamily = document.getElementById("val-task-family");
+    const elValQuantRule = document.getElementById("val-quant-rule");
+
+    // Product Lists
+    const elModelList = document.getElementById("model-list-container");
+    const elHardwareList = document.getElementById("hardware-list-container");
+    const elPrecisionSelect = document.getElementById("precision-select");
+    const elRuntimeSelect = document.getElementById("runtime-select");
+
+    // Right Summary Elements
+    const elValSummaryModel = document.getElementById("val-summary-model");
+    const elValSummaryModelParams = document.getElementById("val-summary-model-params");
+    const elValSummaryTraining = document.getElementById("val-summary-training");
+    const elValSummaryHw = document.getElementById("val-summary-hw");
+    const elValSummaryHwParams = document.getElementById("val-summary-hw-params");
+    const elValSummaryHwCooling = document.getElementById("val-summary-hw-cooling");
+    const elValSummaryLatency = document.getElementById("val-summary-latency");
+    const elValSummaryFps = document.getElementById("val-summary-fps");
+    const elValSummaryMargin = document.getElementById("val-summary-margin");
+    const elValSummaryVramMargin = document.getElementById("val-summary-vram-margin");
+    const elAlertOverrun = document.getElementById("alert-latency-overrun");
+    const elAlertVramOverrun = document.getElementById("alert-vram-overrun");
+
+    // Prepopulate
+    elPrecisionSelect.value = state.software.precision || "INT8";
+    elRuntimeSelect.value = state.software.runtimeEngine || "TensorRT";
+
+    function computeStep4Parameters() {
+      const activeCam = CAMERA_CATALOG.find(c => c.id === state.optics.selectedCameraId) || CAMERA_CATALOG[0];
+      const imgSizeMb = activeCam.technology.includes("Line") ? 4.0 : (activeCam.resolutionMP * 3);
+
+      const timingParams = {
+        timingMode: (req.timingMode === "endless_web") ? "conveyor_throughput" : (req.timingMode || "conveyor_throughput"),
+        throughputPartsPerSec: req.conveyorThroughput || 4.0,
+        robotResponseTimeMs: req.robotResponseTimeMs || 300,
+        stationTaktTimeMs: req.stationTaktTimeMs || 500,
+        parallelProcessing: req.parallelProcessing !== false,
+        exposureTimeMs: calc.maxExposureMs || 5.0,
+        cameraInterface: activeCam.interface,
+        imageSizeMb: imgSizeMb
+      };
+
+      const budget = LatencyEngine.calculateBudget(timingParams);
+
+      elValTakt.textContent = budget.targetTimeMs + " ms";
+      elValTimingSub.textContent = budget.timingLabel;
+      elValOverhead.textContent = budget.tOverheadSerialMs + " ms";
+      elValCamInterface.textContent = activeCam.name.split(" (")[0] + " (" + activeCam.interface.split(" ")[0] + ")";
+      elValNetBudget.textContent = budget.maxInferenceBudgetMs + " ms";
+      elValBudgetLimit.textContent = budget.maxInferenceBudgetMs;
+      elValParallelStatus.textContent = budget.parallelProcessing
+        ? "Parallel Ring Buffer Active (Capture & AI decoupled)"
+        : "Serial Execution (Capture overhead subtracted)";
+
+      if (budget.parallelProcessing) {
+        elWaterfallCallout.textContent = "t_AI,max = T_cycle − t_PLC  (Parallel)";
+      } else {
+        elWaterfallCallout.textContent = "t_AI,max = T_cycle − t_cam − t_PLC  (Serial)";
+      }
+
+      // Compute required TOPS for active model
+      const activeModel = MODEL_CATALOG.find(m => m.id === state.software.selectedModelId) || MODEL_CATALOG[1];
+      const netSec = Math.max(0.001, budget.maxInferenceBudgetMs / 1000.0);
+      const reqGflopsPerSec = activeModel.gflops / netSec;
+      const reqTops = (reqGflopsPerSec / 1000.0).toFixed(2);
+      elValReqCompute.textContent = `${reqTops} TOPS (${Math.round(reqGflopsPerSec)} GFLOPS/s)`;
+      elValReqVram.textContent = `${activeModel.vramMinGb || 0.8} GB`;
+      elValTaskFamily.textContent = req.needs3D
+        ? "Task Class: 3D Point Cloud / 6-DoF Pose"
+        : (activeModel.id === "openvla-robotics" ? "Task Class: VLM / Vision-Language-Action" : "Task Class: 2D Vision & Anomaly");
+
+      const prec = elPrecisionSelect.value;
+      elValQuantRule.textContent = prec === "INT8"
+        ? "INT8 active (~2.4× speedup vs. FP32)"
+        : (prec === "FP16" ? "FP16 active (~1.6× speedup vs. FP32)" : "FP32 baseline (no quantization)");
+
+      state.opticsCalculations.maxInferenceBudgetMs = budget.maxInferenceBudgetMs;
+      AppState.save(state);
+
+      return budget;
+    }
+
+    function renderModels(budget) {
+      elModelList.innerHTML = "";
+      const selectedModelId = state.software.selectedModelId || MODEL_CATALOG[1].id;
+      const activeHw = HARDWARE_CATALOG.find(h => h.id === state.integration.selectedHardwareId) || HARDWARE_CATALOG[2];
+      const prec = elPrecisionSelect.value;
+
+      MODEL_CATALOG.forEach(model => {
+        const isSelected = model.id === selectedModelId;
+        const est = LatencyEngine.estimateInference(model, activeHw, prec);
+        const fitsBudget = est.estimatedMs <= budget.maxInferenceBudgetMs;
+        const modelVram = (model.vramMinGb !== undefined && !isNaN(model.vramMinGb)) ? model.vramMinGb : 0.8;
+        const hwVram = (activeHw.vramGb !== undefined && !isNaN(activeHw.vramGb)) ? activeHw.vramGb : 8.0;
+        const fitsVram = hwVram >= modelVram;
+
+        const card = document.createElement("div");
+        card.className = `card product-card ${isSelected ? 'selected' : ''}`;
+        card.style.cursor = "pointer";
+        card.style.margin = "0 0 0.85rem 0";
+        card.style.padding = "1rem 1.25rem";
+        card.style.border = isSelected ? "2.5px solid #0f9489" : "1px solid var(--border-color)";
+        card.style.backgroundColor = isSelected ? "#f0fdfa" : "#ffffff";
+        card.style.boxShadow = isSelected ? "0 4px 14px rgba(15, 148, 137, 0.18)" : "none";
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                <span style="font-weight: 700; font-size: 0.98rem; color: var(--text-main);">${model.name}</span>
+                ${fitsBudget ? '<span class="unit-badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac;">Fits Budget (' + est.estimatedMs + ' ms &le; ' + budget.maxInferenceBudgetMs + ' ms)</span>' : '<span class="unit-badge" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5;">Exceeds Budget (' + est.estimatedMs + ' ms)</span>'}
+                ${fitsVram ? '<span class="unit-badge" style="background:#ede9fe; color:#4338ca; border:1px solid #c4b5fd;">VRAM OK (' + modelVram + ' GB)</span>' : '<span class="unit-badge" style="background:#fff1f2; color:#9f1239; border:1px solid #fecdd3;">VRAM Warning (Needs ' + modelVram + ' GB)</span>'}
+                ${isSelected ? '<span class="unit-badge" style="background: #0f9489; color: #ffffff;">Selected</span>' : ''}
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem;">${model.category} | Task: <strong>${model.task}</strong></div>
+            </div>
+            <div style="text-align: right;">
+              <span style="font-weight: 700; font-size: 0.95rem; color: #0f172a;">${model.paramsM}M Params</span>
+              <div style="font-size: 0.78rem; color: #0284c7; font-weight: 600;">${model.gflops} GFLOPs</div>
+            </div>
+          </div>
+
+          <!-- Highlighted Core Model Parameters Bar -->
+          <div style="margin-top: 0.6rem; padding: 0.45rem 0.65rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; flex-wrap: wrap; gap: 0.8rem; font-size: 0.78rem; color: #0f172a;">
+            <span>🧠 <strong>Complexity: ${model.paramsM}M Params (${model.gflops} GFLOPs)</strong></span>
+            <span>|</span>
+            <span>🟣 <strong>Min. VRAM: ${modelVram} GB</strong></span>
+            <span>|</span>
+            <span>⏱️ <strong>Latency on ${activeHw.name.split(" (")[0]}: ~${est.estimatedMs} ms</strong></span>
+          </div>
+
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.45rem; margin-bottom: 0.35rem;">
+            <strong>Training Data:</strong> ${model.trainingDataNeeded} &nbsp;|&nbsp; <strong>Best Use Case:</strong> ${model.bestFor}
+          </p>
+
+          ${model.productUrl ? `
+            <div style="margin-top: 0.35rem;">
+              <a href="${model.productUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.76rem; font-weight: 600; color: #0284c7; text-decoration: none;" onclick="event.stopPropagation();">
+                🔗 Official Model & Documentation Page &nearr;
+              </a>
+            </div>
+          ` : ''}
+        `;
+
+        card.addEventListener("click", () => {
+          state.software.selectedModelId = model.id;
+          AppState.save(state);
+          const refreshedBudget = computeStep4Parameters();
+          renderModels(refreshedBudget);
+          renderHardware(refreshedBudget);
+          updateSummary(refreshedBudget);
+        });
+
+        elModelList.appendChild(card);
+      });
+    }
+
+    function renderHardware(budget) {
+      elHardwareList.innerHTML = "";
+      const selectedHwId = state.integration.selectedHardwareId || HARDWARE_CATALOG[2].id;
+      const activeModel = MODEL_CATALOG.find(m => m.id === state.software.selectedModelId) || MODEL_CATALOG[1];
+      const prec = elPrecisionSelect.value;
+      const modelVram = (activeModel.vramMinGb !== undefined && !isNaN(activeModel.vramMinGb)) ? activeModel.vramMinGb : 0.8;
+
+      HARDWARE_CATALOG.forEach(hw => {
+        const isSelected = hw.id === selectedHwId;
+        const est = LatencyEngine.estimateInference(activeModel, hw, prec);
+        const fitsBudget = est.estimatedMs <= budget.maxInferenceBudgetMs;
+        const hwVram = (hw.vramGb !== undefined && !isNaN(hw.vramGb)) ? hw.vramGb : 8.0;
+        const fitsVram = hwVram >= modelVram;
+
+        const card = document.createElement("div");
+        card.className = `card product-card ${isSelected ? 'selected' : ''}`;
+        card.style.cursor = "pointer";
+        card.style.margin = "0 0 0.85rem 0";
+        card.style.padding = "1rem 1.25rem";
+        card.style.border = isSelected ? "2.5px solid #0f9489" : "1px solid var(--border-color)";
+        card.style.backgroundColor = isSelected ? "#f0fdfa" : "#ffffff";
+        card.style.boxShadow = isSelected ? "0 4px 14px rgba(15, 148, 137, 0.18)" : "none";
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;">
+                <span style="font-weight: 700; font-size: 0.98rem; color: var(--text-main);">${hw.name}</span>
+                <span class="unit-badge" style="background:#f1f5f9; color:#334155;">${hw.tier}</span>
+                ${fitsBudget ? '<span class="unit-badge" style="background:#dcfce7; color:#15803d; border:1px solid #86efac;">Budget OK (~' + est.estimatedMs + ' ms)</span>' : '<span class="unit-badge" style="background:#fee2e2; color:#b91c1c; border:1px solid #fca5a5;">Too Slow (~' + est.estimatedMs + ' ms)</span>'}
+                ${fitsVram ? '<span class="unit-badge" style="background:#ede9fe; color:#4338ca; border:1px solid #c4b5fd;">VRAM OK (' + hwVram + ' GB)</span>' : '<span class="unit-badge" style="background:#fff1f2; color:#9f1239; border:1px solid #fecdd3;">VRAM Insufficient (' + hwVram + ' GB &lt; ' + modelVram + ' GB)</span>'}
+                ${isSelected ? '<span class="unit-badge" style="background: #0f9489; color: #ffffff;">Selected</span>' : ''}
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem;">${hw.manufacturer} | Accelerator: <strong>${hw.accelerator}</strong></div>
+            </div>
+            <div style="text-align: right; min-width: 130px;">
+              <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-main);">€ ${(hw.unitCostEuro || 0).toLocaleString()}</span>
+              <div style="font-size: 0.8rem; color: #0d746c; font-weight: 600; margin-top: 0.15rem;">${hw.aiPerfTops} TOPS | ${hwVram} GB VRAM</div>
+            </div>
+          </div>
+
+          <!-- Highlighted Core Hardware Parameters Bar -->
+          <div style="margin-top: 0.6rem; padding: 0.45rem 0.65rem; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; flex-wrap: wrap; gap: 0.8rem; font-size: 0.78rem; color: #0f172a;">
+            <span>💰 <strong>Unit Price: € ${(hw.unitCostEuro || 0).toLocaleString()}</strong></span>
+            <span>|</span>
+            <span>🚀 <strong>Compute: ${hw.aiPerfTops} TOPS</strong></span>
+            <span>|</span>
+            <span>🟣 <strong>VRAM: ${hwVram} GB</strong></span>
+            <span>|</span>
+            <span>⚡ <strong>Power: ${hw.tdpWatt} W (${hw.cooling})</strong></span>
+            <span>|</span>
+            <span>🛡️ <strong>Rating: ${hw.ipRating}</strong></span>
+          </div>
+
+          <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.45rem; margin-bottom: 0.35rem;">
+            <strong>Target Role:</strong> ${hw.idealRole}
+          </p>
+
+          ${hw.productUrl ? `
+            <div style="margin-top: 0.35rem;">
+              <a href="${hw.productUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.76rem; font-weight: 600; color: #0284c7; text-decoration: none;" onclick="event.stopPropagation();">
+                🔗 Manufacturer Product Page &nearr;
+              </a>
+            </div>
+          ` : ''}
+        `;
+
+        card.addEventListener("click", () => {
+          state.integration.selectedHardwareId = hw.id;
+          AppState.save(state);
+          const refreshedBudget = computeStep4Parameters();
+          renderModels(refreshedBudget);
+          renderHardware(refreshedBudget);
+          updateSummary(refreshedBudget);
+        });
+
+        elHardwareList.appendChild(card);
+      });
+    }
+
+    function updateSummary(budget) {
+      const activeModel = MODEL_CATALOG.find(m => m.id === state.software.selectedModelId) || MODEL_CATALOG[1];
+      const activeHw = HARDWARE_CATALOG.find(h => h.id === state.integration.selectedHardwareId) || HARDWARE_CATALOG[2];
+      const prec = elPrecisionSelect.value;
+
+      const est = LatencyEngine.estimateInference(activeModel, activeHw, prec);
+      const modelVram = (activeModel.vramMinGb !== undefined && !isNaN(activeModel.vramMinGb)) ? activeModel.vramMinGb : 0.8;
+      const hwVram = (activeHw.vramGb !== undefined && !isNaN(activeHw.vramGb)) ? activeHw.vramGb : 8.0;
+
+      elValSummaryModel.textContent = activeModel.name;
+      elValSummaryModelParams.textContent = `Parameters: ${activeModel.paramsM}M | Compute: ${activeModel.gflops} GFLOPs | Min. VRAM: ${modelVram} GB`;
+      elValSummaryTraining.textContent = `Training: ${activeModel.trainingDataNeeded}`;
+
+      elValSummaryHw.textContent = activeHw.name;
+      elValSummaryHwParams.textContent = `${activeHw.aiPerfTops} TOPS | ${hwVram} GB VRAM | ${activeHw.tdpWatt} W TDP`;
+      elValSummaryHwCooling.textContent = `Form Factor: ${activeHw.ipRating} | ${activeHw.cooling}`;
+
+      elValSummaryLatency.textContent = est.estimatedMs + " ms";
+      elValSummaryFps.textContent = est.fps + " FPS";
+
+      const margin = parseFloat((budget.maxInferenceBudgetMs - est.estimatedMs).toFixed(1));
+      elValSummaryMargin.textContent = `Real-Time Margin: ${margin >= 0 ? "+" : ""}${margin} ms (Budget: ${budget.maxInferenceBudgetMs} ms)`;
+
+      if (margin >= 0) {
+        elValSummaryMargin.style.color = "#15803d";
+        elAlertOverrun.style.display = "none";
+      } else {
+        elValSummaryMargin.style.color = "#b91c1c";
+        elAlertOverrun.style.display = "block";
+      }
+
+      const vramSufficient = hwVram >= modelVram;
+      if (vramSufficient) {
+        elValSummaryVramMargin.textContent = `Sufficient (${hwVram} GB ≥ ${modelVram} GB)`;
+        elValSummaryVramMargin.style.color = "#15803d";
+        elAlertVramOverrun.style.display = "none";
+      } else {
+        const vramDeficit = (modelVram - hwVram).toFixed(1);
+        elValSummaryVramMargin.textContent = `Deficit (-${vramDeficit} GB OOM Risk!)`;
+        elValSummaryVramMargin.style.color = "#b91c1c";
+        elAlertVramOverrun.style.display = "block";
+      }
+
+      state.software.selectedModelId = activeModel.id;
+      state.software.precision = prec;
+      state.software.runtimeEngine = elRuntimeSelect.value;
+      state.integration.selectedHardwareId = activeHw.id;
+      AppState.save(state);
+    }
+
+    elPrecisionSelect.addEventListener("change", () => {
+      const budget = computeStep4Parameters();
+      renderModels(budget);
+      renderHardware(budget);
+      updateSummary(budget);
+    });
+
+    elRuntimeSelect.addEventListener("change", () => {
+      const budget = computeStep4Parameters();
+      renderModels(budget);
+      renderHardware(budget);
+      updateSummary(budget);
+    });
+
+    const currentBudget = computeStep4Parameters();
+    renderModels(currentBudget);
+    renderHardware(currentBudget);
+    updateSummary(currentBudget);
+  </script>
+</body>
+</html>
