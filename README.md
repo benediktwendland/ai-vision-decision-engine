@@ -1,9 +1,8 @@
 # Decision Engine for Industrial AI-Based Vision
-### From Process Constraints to Edge Deployment: A Quantitative Co-Design Framework for Manufacturing
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Status: Academic Prototype](https://img.shields.io/badge/Status-Academic%20Prototype-success.svg)]()
-[![Methodology: CIRP 2026 Compatible](https://img.shields.io/badge/Methodology-CIRP%202026%20Werheid%20et%20al.-orange.svg)]()
 [![Stack: Vanilla HTML5 / ES6](https://img.shields.io/badge/Stack-Zero%20Dependency%20Static-emerald.svg)]()
 
 ---
@@ -14,16 +13,9 @@ In discrete manufacturing, **over 70% of AI vision proofs-of-concept (POCs) fail
 
 This repository provides an **open-source, quantitative engineering selection and dimensioning decision engine**. It operationalizes the procedural macro-lifecycle of **Werheid et al. (WZL RWTH Aachen, CIRP 2026)** by transforming qualitative guidelines into closed-form optical physics, latency waterfall budgets, multi-criteria Pareto synthesis, and dynamic capital budgeting (Net Present Value - NPV).
 
-```
-       SHOP-FLOOR CONSTRAINTS                       DETERMINISTIC CO-DESIGN                       DEPLOYABLE PRODUCTION STACK
-+------------------------------------+       +------------------------------------+       +------------------------------------+
-| * Takt Time / Velocity (m/s)       |       | 1. Dynamic Capital Budgeting (NPV) |       | * Sized Industrial 2D/3D Sensor    |
-| * Smallest Defect d_min (µm)       | ----> | 2. Optical Nyquist Sizing (MP)     | ----> | * C-Mount Lens & Strobe LED        |
-| * Surface (Specular/Matte/Dark)    |       | 3. Motion Blur Exposure Limit (µs) |       | * INT8/FP16 AI Model (ONNX/TRT)    |
-| * 2D vs. 3D Spatial Geometry       |       | 4. Latency Waterfall & TOPS Sizing |       | * Fanless Edge IPC / Embedded GPU  |
-| * OT Fieldbus & Machine Safety     |       | 5. 4-Pillar Integration Verification|      | * Harmonized Itemized BOM & Specs  |
-+------------------------------------+       +------------------------------------+       +------------------------------------+
-```
+<p align="center">
+  <img src="docs/Prozessbild.png" alt="5-Step Engineering Framework" width="100%">
+</p>
 
 ---
 
@@ -35,11 +27,6 @@ This repository provides an **open-source, quantitative engineering selection an
 > * **Exclusion of Warranty & Liability:** The software is provided *"as is"*, without warranty of any kind, express or implied. The authors and contributors accept no liability for damages, production downtime, sizing errors, integration failures, or economic losses resulting from the use of this tool.  
 > * **Mandatory Field Engineering Validation:** Physical machine commissioning, optical stray-light verification, thermal cabinet design, functional machine safety (ISO 13849 / Performance Level d/e, CE marking), and workforce safety regulations must always be verified and approved on-site by certified automation and vision engineers.
 
-> **Deutsch:**  
-> Dieses Tool ist ein **akademischer Forschungsprototyp zur ingenieurwissenschaftlichen Entscheidungsunterstützung**.  
-> * **Kein Anspruch auf Vollständigkeit oder Richtigkeit:** Alle physikalischen Berechnungen, Komponentenauswahlen, Zeitbudgets und Kostenschätzungen sind heuristische bzw. analytische Näherungen. Sie erheben keinen Anspruch auf Vollständigkeit oder Richtigkeit.  
-> * **Haftungsausschluss:** Die Bereitstellung erfolgt ohne jegliche Gewährleistung (*"as is"*). Jegliche Haftung für Produktionsausfälle, Fehldimensionierungen, entgangene Gewinne oder wirtschaftliche Fehlentscheidungen ist ausdrücklich ausgeschlossen.  
-> * **Ingenieurtechnische Pflichtprüfung:** Reale Industrieanlagen, Schaltschrank-Entwärmungen, optische Fremdlichtabschirmungen sowie die funktionale Maschinensicherheit (ISO 13849 / CE) müssen vor Inbetriebnahme zwingend durch qualifiziertes Fachpersonal verifiziert werden.
 
 ---
 
@@ -124,7 +111,8 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 
 ### Option 3: Instant Deployment on GitHub Pages
 1. Push this repository to GitHub.
-2. Go to **Settings** $ightarrow$ **Pages**.
+2. Go to **Settings** $
+ightarrow$ **Pages**.
 3. Under **Build and deployment**, set **Source** to `Deploy from a branch`, branch to `main`, and folder to `/ (root)`.
 4. Your decision tool is live globally with an interactive URL in under 60 seconds!
 
